@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.migro.jobcenter.mapper.SysJobMapper">
+	<select id="pagingQuery" resultType="com.migro.jobcenter.model.SysJob" useCache="false">
+		select * from sys_job
+		<where>
+			<if test="cm.jobName != null and cm.jobName != ''">
+					and job_name=#{cm.jobName}
+			</if>
+			<if test="cm.jobGroup != null and cm.jobGroup != ''">
+					and job_group=#{cm.jobGroup}
+			</if>
+			<if test="cm.invokeTarget != null and cm.invokeTarget != ''">
+					and invoke_target=#{cm.invokeTarget}
+			</if>
+			<if test="cm.cronExpression != null and cm.cronExpression != ''">
+					and cron_expression=#{cm.cronExpression}
+			</if>
+			<if test="cm.misfirePolicy != null and cm.misfirePolicy != ''">
+					and misfire_policy=#{cm.misfirePolicy}
+			</if>
+			<if test="cm.concurrent != null and cm.concurrent != ''">
+					and concurrent=#{cm.concurrent}
+			</if>
+			<if test="cm.status != null and cm.status != ''">
+					and status=#{cm.status}
+			</if>
+			<if test="cm.createBy != null and cm.createBy != ''">
+					and create_by=#{cm.createBy}
+			</if>
+			<if test="cm.createTime != null and cm.createTime != ''">
+					and create_time=#{cm.createTime}
+			</if>
+			<if test="cm.updateBy != null and cm.updateBy != ''">
+					and update_by=#{cm.updateBy}
+			</if>
+			<if test="cm.updateTime != null and cm.updateTime != ''">
+					and update_time=#{cm.updateTime}
+			</if>
+			<if test="cm.remark != null and cm.remark != ''">
+					and remark=#{cm.remark}
+			</if>
+			<if test="cm.keyword != null and cm.keyword != ''">
+				and (
+					or job_name like CONCAT('%',#{cm.keyword},'%')
+					or job_group like CONCAT('%',#{cm.keyword},'%')
+					or invoke_target like CONCAT('%',#{cm.keyword},'%')
+					or cron_expression like CONCAT('%',#{cm.keyword},'%')
+					or misfire_policy like CONCAT('%',#{cm.keyword},'%')
+					or concurrent like CONCAT('%',#{cm.keyword},'%')
+					or status like CONCAT('%',#{cm.keyword},'%')
+					or create_by like CONCAT('%',#{cm.keyword},'%')
+					or create_time like CONCAT('%',#{cm.keyword},'%')
+					or update_by like CONCAT('%',#{cm.keyword},'%')
+					or update_time like CONCAT('%',#{cm.keyword},'%')
+					or remark like CONCAT('%',#{cm.keyword},'%')
+				)
+			</if>
+		</where>
+		<if test="cm.orderBy != null and cm.orderBy != ''">
+			order by ${cm.orderBy}
+		</if>
+		<if test="cm.sortAsc != null and cm.sortAsc != ''">
+			${cm.sortAsc}
+		</if>
+	</select>
+
+	<select id="selectJobAll" resultType="com.migro.jobcenter.model.SysJob">
+		<include refid="selectJob"/>
+	</select>
+
+
+	<sql id="selectJob">
+        select * from sys_job
+    </sql>
+
+</mapper>

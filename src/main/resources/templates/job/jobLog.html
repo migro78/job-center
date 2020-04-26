@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('定时任务日志列表')" />
+</head>
+<body class="gray-bg">
+
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="jobLog-form">
+					<div class="select-list">
+						<ul>
+							<li>
+								任务名称：<input type="text" name="jobName"/>
+							</li>
+							<li>
+								任务分组：<select name="jobGroup">
+								<option value="">所有</option>
+								<option value="system">系统</option>
+								<option value="default">默认</option>
+							</select>
+							</li>
+							<li>
+								任务状态：<select name="status">
+								<option value="">所有</option>
+								<option value="1">正常</option>
+								<option value="0">失败</option>
+							</select>
+							</li>
+							<li class="select-time">
+								<label>执行时间： </label>
+								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+			<div class="btn-group-sm" id="toolbar" role="group">
+				 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="monitor:job:remove">
+	                <i class="fa fa-remove"></i> 删除
+	            </a>
+	            <a class="btn btn-danger" onclick="$.operate.clean()" shiro:hasPermission="monitor:job:remove">
+	                <i class="fa fa-trash"></i> 清空
+	            </a>
+	            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="monitor:job:export">
+		            <i class="fa fa-download"></i> 导出
+		        </a>
+	        </div>
+	        
+	        <div class="col-sm-12 select-table table-striped">
+			    <table id="bootstrap-table"></table>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+		var detailFlag = [[true]];
+		var statusDatas = [{"dictLabel":"正常","dictValue":1},{"dictLabel":"暂停","dictValue":0}];
+		var groupDatas = [{"dictCode":10,"dictSort":1,"dictLabel":"\u9ED8\u8BA4","dictValue":"DEFAULT","dictType":"sys_job_group","cssClass":"","listClass":"","isDefault":"Y","status":"0","default":true},{"dictCode":11,"dictSort":2,"dictLabel":"\u7CFB\u7EDF","dictValue":"SYSTEM","dictType":"sys_job_group","cssClass":"","listClass":"","isDefault":"N","status":"0","default":false}];
+		var prefix = ctx + "jobLog";
+
+		$(function() {
+		    var options = {
+		        url: prefix + "/list",
+		        cleanUrl: prefix + "/clean",
+		        detailUrl: prefix + "/detail/{id}",
+		        removeUrl: prefix + "/remove/{ids}",
+		        exportUrl: prefix + "/export",
+		        sortName: "id",
+		        sortOrder: "desc",
+		        modalName: "任务日志",
+		        columns: [{
+		            checkbox: true
+		        },
+		        {
+		            field: 'id',
+		            title: '日志编号'
+		        },
+		        {
+		            field: 'jobName',
+		            title: '任务名称'
+		        },
+		        {
+		            field: 'jobGroup',
+		            title: '任务分组',
+		            formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(groupDatas, value);
+		            }
+		        },
+		        {
+		            field: 'invokeTarget',
+		            title: '调用目标字符串',
+		            formatter: function(value, row, index) {
+                    	return $.table.tooltip(value);
+                    }
+		        },
+		        {
+		            field: 'jobMessage',
+		            title: '日志信息'
+		        },
+		        {
+		            field: 'status',
+		            title: '状态',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(statusDatas, value);
+		            }
+		        },
+		        {
+		            field: 'createTime',
+		            title: '创建时间',
+		            sortable: true
+		        },{
+					field: 'timeCost',
+					title: '耗时(毫秒)'
+				},{
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		                var actions = [];
+		                actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详细</a>');
+		                return actions.join('');
+		            }
+		        }]
+		    };
+		    $.table.init(options);
+		});
+	</script>
+</body>
+</html>

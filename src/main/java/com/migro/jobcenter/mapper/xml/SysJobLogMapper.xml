@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.migro.jobcenter.mapper.SysJobLogMapper">
+	<select id="pagingQuery" resultType="com.migro.jobcenter.model.SysJobLog" useCache="false">
+		select * from sys_job_log
+		<where>
+			<if test="cm.jobName != null and cm.jobName != ''">
+					and job_name=#{cm.jobName}
+			</if>
+			<if test="cm.jobGroup != null and cm.jobGroup != ''">
+					and job_group=#{cm.jobGroup}
+			</if>
+			<if test="cm.invokeTarget != null and cm.invokeTarget != ''">
+					and invoke_target=#{cm.invokeTarget}
+			</if>
+			<if test="cm.jobMessage != null and cm.jobMessage != ''">
+					and job_message=#{cm.jobMessage}
+			</if>
+			<if test="cm.status != null">
+					and status=#{cm.status}
+			</if>
+			<if test="cm.exceptionInfo != null and cm.exceptionInfo != ''">
+					and exception_info=#{cm.exceptionInfo}
+			</if>
+			<if test="cm.createTime != null">
+					and create_time &gt;=#{cm.createTimeStart}
+					and create_time &lt;=#{cm.createTimeEnd}
+			</if>
+			<if test="cm.keyword != null and cm.keyword != ''">
+				and (
+					or job_name like CONCAT('%',#{cm.keyword},'%')
+					or job_group like CONCAT('%',#{cm.keyword},'%')
+					or invoke_target like CONCAT('%',#{cm.keyword},'%')
+					or job_message like CONCAT('%',#{cm.keyword},'%')
+					or status like CONCAT('%',#{cm.keyword},'%')
+					or exception_info like CONCAT('%',#{cm.keyword},'%')
+					or create_time like CONCAT('%',#{cm.keyword},'%')
+				)
+			</if>
+		</where>
+		<if test="cm.orderBy != null and cm.orderBy != ''">
+			order by ${cm.orderBy}
+		</if>
+		<if test="cm.sortAsc != null and cm.sortAsc != ''">
+			${cm.sortAsc}
+		</if>
+	</select>
+	
+	<select id="cleanJobLogs">
+		truncate table sys_job_log
+	</select>
+</mapper>
