@@ -27,9 +27,14 @@ public abstract class AbstractQuartzJob implements Job {
     protected static Logger logger = LogManager.getLogger();
 
     /**
-     * 线程本地变量
+     * 线程本地变量-开始时间
      */
     private static ThreadLocal<Date> threadLocal = new ThreadLocal<>();
+
+    /**
+     * 线程本地变量-执行结果
+     */
+    private static ThreadLocal<Object> result = new ThreadLocal<>();
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -40,7 +45,7 @@ public abstract class AbstractQuartzJob implements Job {
         try {
             before(context, sysJob);
             if (sysJob != null) {
-                doExecute(context, sysJob);
+                result.set(doExecute(context, sysJob));
             }
             after(context, sysJob, null);
         } catch (Exception e) {
@@ -67,7 +72,9 @@ public abstract class AbstractQuartzJob implements Job {
      */
     protected void after(JobExecutionContext context, SysJob sysJob, Exception e) {
         Date startTime = threadLocal.get();
+        Object res = result.get();
         threadLocal.remove();
+        result.remove();
 
         final SysJobLog sysJobLog = new SysJobLog();
         sysJobLog.setJobName(sysJob.getJobName());
@@ -75,19 +82,16 @@ public abstract class AbstractQuartzJob implements Job {
         sysJobLog.setInvokeTarget(sysJob.getInvokeTarget());
         sysJobLog.setStartTime(startTime);
         sysJobLog.setStopTime(new Date());
+        sysJobLog.setJobMessage(res==null?"":JSON.toJSONString(res));
         long runMs = sysJobLog.getStopTime().getTime() - sysJobLog.getStartTime().getTime();
         sysJobLog.setTimeCost(runMs);
-        String result = "";
         if (e != null) {
             sysJobLog.setStatus(Constants.FAIL);
             String errorMsg = DataUtil.substring(ExceptionUtil.getStackTraceAsString(e), 0, 2000);
             sysJobLog.setExceptionInfo(errorMsg);
-            result = Constants.FAIL_MSG;
         } else {
             sysJobLog.setStatus(Constants.SUCCESS);
-            result = Constants.SUCCESS_MSG;
         }
-        sysJobLog.setJobMessage(result);
 
         // 写入数据库当中
         SpringUtils.getBean(ISysJobLogService.class).update(sysJobLog);
@@ -100,5 +104,5 @@ public abstract class AbstractQuartzJob implements Job {
      * @param sysJob  系统计划任务
      * @throws Exception 执行过程中的异常
      */
-    protected abstract void doExecute(JobExecutionContext context, SysJob sysJob) throws Exception;
+    protected abstract Object doExecute(JobExecutionContext context, SysJob sysJob) throws Exception;
 }

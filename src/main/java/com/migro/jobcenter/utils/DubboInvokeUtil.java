@@ -27,7 +27,7 @@ public class DubboInvokeUtil {
      *
      * @param sysJob 系统任务
      */
-    public static void invokeMethod(SysJob sysJob) throws Exception {
+    public static Object invokeMethod(SysJob sysJob) throws Exception {
         String invokeTarget = sysJob.getInvokeTarget();
         String beanName = BeanInvokeUtil.getBeanName(invokeTarget);
         String methodName = BeanInvokeUtil.getMethodName(invokeTarget);
@@ -37,7 +37,7 @@ public class DubboInvokeUtil {
             throw new RuntimeException("Dubbo服务调用需要完整包名:" + beanName);
         }
 
-        DubboServiceFactory.getInstance().genericInvoke(sysJob.getApplicationName(),beanName,methodName,methodParams);
+        return DubboServiceFactory.getInstance().genericInvoke(sysJob.getApplicationName(),beanName,methodName,methodParams);
     }
 
 

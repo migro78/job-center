@@ -63,7 +63,7 @@
 	<th:block th:include="include :: footer" />
 	<script th:inline="javascript">
 		var detailFlag = [[true]];
-		var statusDatas = [{"dictLabel":"正常","dictValue":1},{"dictLabel":"失败","dictValue":0}];
+		var statusDatas = [{"dictLabel":"成功","dictValue":1},{"dictLabel":"失败","dictValue":0}];
 		var groupDatas = [{"dictCode":10,"dictSort":1,"dictLabel":"\u9ED8\u8BA4","dictValue":"DEFAULT","dictType":"sys_job_group","cssClass":"","listClass":"","isDefault":"Y","status":"0","default":true},{"dictCode":11,"dictSort":2,"dictLabel":"\u7CFB\u7EDF","dictValue":"SYSTEM","dictType":"sys_job_group","cssClass":"","listClass":"","isDefault":"N","status":"0","default":false}];
 		var prefix = ctx + "jobLog";
 
@@ -99,12 +99,15 @@
 		            field: 'invokeTarget',
 		            title: '调用目标字符串',
 		            formatter: function(value, row, index) {
-                    	return $.table.tooltip(value);
+                    	return $.table.tooltip(value,20,'copy');
                     }
 		        },
 		        {
 		            field: 'jobMessage',
-		            title: '日志信息'
+		            title: '执行结果',
+                    formatter: function(value, row, index) {
+                        return $.table.tooltip(value,20,'copy');
+                    }
 		        },
 		        {
 		            field: 'status',

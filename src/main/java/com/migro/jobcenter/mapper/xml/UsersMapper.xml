@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.migro.jobcenter.mapper.UsersMapper">
+	<select id="pagingQuery" resultType="com.migro.jobcenter.model.Users" useCache="false">
+		select * from users
+		<where>
+			<if test="cm.username != null and cm.username != ''">
+					and username=#{cm.username}
+			</if>
+			<if test="cm.password != null and cm.password != ''">
+					and password=#{cm.password}
+			</if>
+			<if test="cm.enable != null and cm.enable != ''">
+					and enable=#{cm.enable}
+			</if>
+			<if test="cm.keyword != null and cm.keyword != ''">
+				and (
+					or username like CONCAT('%',#{cm.keyword},'%')
+					or password like CONCAT('%',#{cm.keyword},'%')
+					or enable like CONCAT('%',#{cm.keyword},'%')
+				)
+			</if>
+		</where>
+		<if test="cm.orderBy != null and cm.orderBy != ''">
+			order by ${cm.orderBy}
+		</if>
+		<if test="cm.sortAsc != null and cm.sortAsc != ''">
+			${cm.sortAsc}
+		</if>
+	</select>
+</mapper>

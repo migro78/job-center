@@ -74,10 +74,32 @@ COMMENT ON TABLE "sys_job_log" IS '系统任务执行记录表';
 ALTER TABLE "sys_job_log" ADD CONSTRAINT "pk_sys_job_log" PRIMARY KEY ("id");
 
 -- ----------------------------
+-- Table structure for users
 -- ----------------------------
+CREATE TABLE "users" (
+  "id" SERIAL8  NOT NULL,
+  "username" varchar(50)  NOT NULL,
+  "password" varchar(50)  NOT NULL,
+  "enable" int2 DEFAULT 1
+)
+;
+COMMENT ON COLUMN "users"."id" IS 'id';
+COMMENT ON COLUMN "users"."username" IS '用户名';
+COMMENT ON COLUMN "users"."password" IS '密码';
+COMMENT ON COLUMN "users"."enable" IS '状态';
+COMMENT ON TABLE "users" IS '用户表';
+
+-- ----------------------------
+-- Primary Key structure for table users
+-- ----------------------------
+ALTER TABLE "users" ADD CONSTRAINT "pk_users" PRIMARY KEY ("id");
+
+
+-- *********************************************************************************************************************
+-- *********************************************************************************************************************
 -- Table structure for Quartz Schedual
--- ----------------------------
--- ----------------------------
+-- *********************************************************************************************************************
+-- *********************************************************************************************************************
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers

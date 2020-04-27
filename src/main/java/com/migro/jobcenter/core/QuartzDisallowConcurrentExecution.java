@@ -15,13 +15,15 @@ import top.doublewin.core.util.DataUtil;
 @DisallowConcurrentExecution
 public class QuartzDisallowConcurrentExecution extends AbstractQuartzJob {
     @Override
-    protected void doExecute(JobExecutionContext context, SysJob sysJob) throws Exception {
+    protected Object doExecute(JobExecutionContext context, SysJob sysJob) throws Exception {
+        Object ret = null;
         if (DataUtil.isNotEmpty(sysJob)) {
             if (DataUtil.isNotEmpty(sysJob.getInvokeType()) && sysJob.getInvokeType() == 1) {
-                DubboInvokeUtil.invokeMethod(sysJob);
+                ret = DubboInvokeUtil.invokeMethod(sysJob);
             } else {
-                BeanInvokeUtil.invokeMethod(sysJob);
+                ret = BeanInvokeUtil.invokeMethod(sysJob);
             }
         }
+        return ret;
     }
 }
