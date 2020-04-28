@@ -68,12 +68,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- 数据库结构同步 -->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>5.2.4</version>
-        </dependency>
 
         <!-- JDBC & Mybatis -->
         <dependency>
@@ -149,19 +143,16 @@
             <version>4.2.0</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
 
     </dependencies>
 
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
 
         <plugins>
             <plugin>
@@ -228,18 +219,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!--   flywaydb 数据库同步插件   -->
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>6.3.0</version>
-                <configuration>
-                    <url>jdbc:postgresql://127.0.0.1:5432/job_center</url>
-                    <user>postgres</user>
-                    <password>postgres</password>
-                </configuration>
             </plugin>
 
         </plugins>

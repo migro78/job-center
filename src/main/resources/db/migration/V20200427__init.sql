@@ -95,6 +95,11 @@ COMMENT ON TABLE "users" IS '用户表';
 ALTER TABLE "users" ADD CONSTRAINT "pk_users" PRIMARY KEY ("id");
 
 
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO "users" VALUES (1, 'admin', 'Gj8f5qoJNbNnngcI/6esb7==', 1);
+
 -- *********************************************************************************************************************
 -- *********************************************************************************************************************
 -- Table structure for Quartz Schedual

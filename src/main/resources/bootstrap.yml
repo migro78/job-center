@@ -1,0 +1,77 @@
+server:
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+spring:
+  application:
+    name: job-center
+  cloud:
+    compatibility-verifier:
+      enabled: false
+  # 模板引擎
+  thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: static/i18n/messages
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles:
+    active: druid
+  # 文件上传
+  servlet:
+     multipart:
+       # 单个文件大小
+       max-file-size:  10MB
+       # 设置总上传的文件大小
+       max-request-size:  20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  datasource:
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DataBaseHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+dubbo:
+  application:            #应用配置，用于配置当前应用信息，不管该应用是提供者还是消费者。
+    name: ${spring.application.name}
+  consumer:
+    id: ${spring.application.name}
+    default: true
+    timeout: 8000
+    retries: 0
+    check: false
+mybatis:
+  mapper-locations: classpath*:**/mapper/xml/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.migro.jobcenter.model
+  configuration:
+    map-underscore-to-camel-case: true
+mybatis-plus:
+  mapper-locations: classpath*:**/mapper/xml/*.xml
+logging:
+  level:
+    com.migro.jobcenter.mapper: error
+    com.migro.jobcenter: error
+    top.doublewin: error
+  file: /logs/jobcenter.log
