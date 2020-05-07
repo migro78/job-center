@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import top.doublewin.core.base.BaseModel;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -20,107 +21,135 @@ import java.util.Date;
 public class SysJobLog extends BaseModel {
 
     @ApiModelProperty(value = "任务名称 ")
-	private String jobName;
+    private String jobName;
     @ApiModelProperty(value = "任务组名")
-	private String jobGroup;
+    private String jobGroup;
     @ApiModelProperty(value = "调用目标字符串")
-	private String invokeTarget;
+    private String invokeTarget;
     @ApiModelProperty(value = "日志信息")
-	private String jobMessage;
+    private String jobMessage;
     @ApiModelProperty(value = "执行状态   1--正常 0--失败")
-	private Integer status;
+    private Integer status;
     @ApiModelProperty(value = "异常信息")
-	private String exceptionInfo;
+    private String exceptionInfo;
     @ApiModelProperty(value = "创建时间")
-	private Date createTime;
-	@ApiModelProperty(value = "耗时（毫秒）")
-	private Long timeCost;
+    private Date createTime;
+    @ApiModelProperty(value = "耗时（毫秒）")
+    private Long timeCost;
 
-	@TableField(exist = false)
-	private Date startTime;
-	@TableField(exist = false)
-	private Date stopTime;
+    @TableField(exist = false)
+    private Date startTime;
+    @TableField(exist = false)
+    private Date stopTime;
+    @TableField(exist = false)
+    private Integer pageSize;
+    @TableField(exist = false)
+    private Integer pageNumber;
+    @TableField(exist = false)
+    private List<String> searchTime;
 
 
+    public String getJobName() {
+        return jobName;
+    }
 
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
 
-	public String getJobName() {
-		return jobName;
-	}
+    public String getJobGroup() {
+        return jobGroup;
+    }
 
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
-	}
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
+    }
 
-	public String getJobGroup() {
-		return jobGroup;
-	}
+    public String getInvokeTarget() {
+        return invokeTarget;
+    }
 
-	public void setJobGroup(String jobGroup) {
-		this.jobGroup = jobGroup;
-	}
+    public void setInvokeTarget(String invokeTarget) {
+        this.invokeTarget = invokeTarget;
+    }
 
-	public String getInvokeTarget() {
-		return invokeTarget;
-	}
+    public String getJobMessage() {
+        return jobMessage;
+    }
 
-	public void setInvokeTarget(String invokeTarget) {
-		this.invokeTarget = invokeTarget;
-	}
+    public void setJobMessage(String jobMessage) {
+        this.jobMessage = jobMessage;
+    }
 
-	public String getJobMessage() {
-		return jobMessage;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public void setJobMessage(String jobMessage) {
-		this.jobMessage = jobMessage;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public String getExceptionInfo() {
+        return exceptionInfo;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setExceptionInfo(String exceptionInfo) {
+        this.exceptionInfo = exceptionInfo;
+    }
 
-	public String getExceptionInfo() {
-		return exceptionInfo;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setExceptionInfo(String exceptionInfo) {
-		this.exceptionInfo = exceptionInfo;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public Date getStartTime() {
+        return startTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public Date getStopTime() {
+        return stopTime;
+    }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+    public void setStopTime(Date stopTime) {
+        this.stopTime = stopTime;
+    }
 
-	public Date getStopTime() {
-		return stopTime;
-	}
+    public Long getTimeCost() {
+        return timeCost;
+    }
 
-	public void setStopTime(Date stopTime) {
-		this.stopTime = stopTime;
-	}
+    public void setTimeCost(Long timeCost) {
+        this.timeCost = timeCost;
+    }
 
-	public Long getTimeCost() {
-		return timeCost;
-	}
+    public Integer getPageSize() {
+        return pageSize;
+    }
 
-	public void setTimeCost(Long timeCost) {
-		this.timeCost = timeCost;
-	}
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public List<String> getSearchTime() {
+        return searchTime;
+    }
+
+    public void setSearchTime(List<String> searchTime) {
+        this.searchTime = searchTime;
+    }
 }

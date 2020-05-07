@@ -24,15 +24,15 @@
 							<li>
 								任务状态：<select name="status">
 								<option value="">所有</option>
-								<option value="1">正常</option>
+								<option value="1">成功</option>
 								<option value="0">失败</option>
 							</select>
 							</li>
 							<li class="select-time">
 								<label>执行时间： </label>
-								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
+								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="searchTime[0]"/>
 								<span>-</span>
-								<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+								<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="searchTime[1]"/>
 							</li>
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>

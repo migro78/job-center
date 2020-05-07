@@ -41,6 +41,10 @@ public class JobController extends BaseController<SysJob, ISysJobService> {
     @ResponseBody
     public Object addJob(@Validated SysJob job) {
         try {
+            // 默认应用名
+            job.setApplicationName("job-center");
+            // 默认禁止并发
+            job.setConcurrent(0);
             service.insertJob(job);
         } catch (Exception e) {
             logger.error(e, e);

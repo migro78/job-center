@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import top.doublewin.core.base.BaseController;
+import top.doublewin.core.util.DataUtil;
+import top.doublewin.core.util.DateUtil;
 
 import java.util.Map;
 
@@ -33,6 +35,19 @@ public class JobLogController extends BaseController<SysJobLog, ISysJobLogServic
     @ResponseBody
     public Object jobLogList(ModelMap modelMap, SysJobLog param) {
         Map map = (Map) JSON.parse(JSON.toJSONString(param));
+        // 处理查询时间
+        if(DataUtil.isNotEmpty(param.getSearchTime())){
+            if(param.getSearchTime().size()>0){
+                if(DataUtil.isNotEmpty(param.getSearchTime().get(0))) {
+                    map.put("searchTimeStart", DateUtil.stringToDate(param.getSearchTime().get(0)));
+                }
+            }
+            if(param.getSearchTime().size()>1){
+                if(DataUtil.isNotEmpty(param.getSearchTime().get(1))) {
+                    map.put("searchTimeEnd", DateUtil.stringToDate(param.getSearchTime().get(1)+ " 23:59:59"));
+                }
+            }
+        }
         return super.pagingQuery(modelMap, map);
     }
 

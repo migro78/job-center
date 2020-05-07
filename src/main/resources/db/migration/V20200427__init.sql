@@ -16,7 +16,8 @@ CREATE TABLE "sys_job" (
   "update_time" timestamp(6),
   "remark" varchar(200) ,
   "invoke_type" int2,
-  "application_name" varchar(50)
+  "application_name" varchar(50),
+  "async" int2
 )
 ;
 COMMENT ON COLUMN "sys_job"."job_name" IS '任务名称';
@@ -33,6 +34,7 @@ COMMENT ON COLUMN "sys_job"."update_time" IS '更新时间';
 COMMENT ON COLUMN "sys_job"."remark" IS '备注信息';
 COMMENT ON COLUMN "sys_job"."invoke_type" IS '调用类型  1--dubbo  2--bean';
 COMMENT ON COLUMN "sys_job"."application_name" IS 'dubbo应用名称';
+COMMENT ON COLUMN "sys_job"."async" IS '异步调用 1--异步  0--同步';
 COMMENT ON TABLE "sys_job" IS '系统任务表';
 
 -- ----------------------------

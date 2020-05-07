@@ -142,9 +142,9 @@ var table = {
             	var curParams = {
             			// 传递参数查询参数
                         pageSize:       params.limit,
-                        pageNum:        params.offset / params.limit + 1,
+                        pageNumber:     params.offset / params.limit + 1,
                         searchValue:    params.search,
-                        orderBy:  params.sort,
+                        orderBy:        params.sort,
                         isAsc:          params.order
             		};
             	var currentId = $.common.isEmpty(table.options.formId) ? $('form').attr('id') : table.options.formId;
@@ -328,7 +328,7 @@ var table = {
 	                    });
                     }
                     search.pageSize = params.limit;
-                    search.pageNum = params.offset / params.limit + 1;
+                    search.pageNumber = params.offset / params.limit + 1;
                     search.searchValue = params.search;
                     search.orderBy = params.sort;
                     search.isAsc = params.order;

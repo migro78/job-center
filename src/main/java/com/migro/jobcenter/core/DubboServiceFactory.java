@@ -5,6 +5,7 @@ import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.utils.ReferenceConfigCache;
+import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -48,7 +51,27 @@ public class DubboServiceFactory {
         return SingletonHolder.INSTANCE;
     }
 
+    /**
+     * dubbo泛化调用(异步方式)
+     *
+     * @param
+     * @return
+     */
+    public Object genericAsyncInvoke(String applicationName, String interfaceClass, String methodName, Map parameters) {
+        return invoke(applicationName, interfaceClass, methodName, parameters, true);
+    }
+
+    /**
+     * dubbo泛化调用(同步方式)
+     *
+     * @param
+     * @return
+     */
     public Object genericInvoke(String applicationName, String interfaceClass, String methodName, Map parameters) {
+        return invoke(applicationName, interfaceClass, methodName, parameters, false);
+    }
+
+    private Object invoke(String applicationName, String interfaceClass, String methodName, Map parameters, boolean async) {
         ApplicationConfig applicationConfig = new ApplicationConfig();
         applicationConfig.setName(applicationName);
         ReferenceConfig<GenericService> reference = new ReferenceConfig<GenericService>();
@@ -59,6 +82,16 @@ public class DubboServiceFactory {
         reference.setInterface(interfaceClass);
         // 声明为泛化接口
         reference.setGeneric(true);
+        // 异步调用
+        if (async) {
+            reference.setAsync(true);
+            // 设置异步调用最大超时时间 1 小时
+            reference.setTimeout(60 * 60 * 1000);
+            logger.debug("异步调用，超时时间：{}",reference.getTimeout());
+        } else {
+            // 设置同步调用超时时间 20 秒
+            reference.setTimeout(20 * 1000);
+        }
 
         //ReferenceConfig实例很重，封装了与注册中心的连接以及与提供者的连接，
         //需要缓存，否则重复生成ReferenceConfig可能造成性能问题并且会有内存和连接泄漏。
@@ -82,14 +115,30 @@ public class DubboServiceFactory {
         return genericService.$invoke(methodName, null, null);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String interfaceClass = "com.doublewin.specialdisease.service.ISysUserService";
-        String methodName = "selectSysUserPage";
-        List<DubboInvokeParam> param = new ArrayList<>();
-        HashMap map = new HashMap();
-        //map.put("name", "U");
-        System.out.println("====================>>>>>>>>>>>>>" + DubboServiceFactory.getInstance().genericInvoke("special-disease", interfaceClass, methodName, map));
+        String methodName = "asyncHello";
+        Map<String, Object> param = new ConcurrentHashMap<>();
+        param.put("name", "async call request");
+        boolean run = true;
 
+        DubboServiceFactory.getInstance().genericInvoke("job", interfaceClass, methodName, param);
+
+
+        CompletableFuture<String> completableFuture = RpcContext.getContext().getCompletableFuture();
+        // 为Future添加回调
+        completableFuture.whenComplete((retValue, exception) -> {
+            if (exception == null) {
+                System.out.println("asyncTest Response: " + retValue);
+            } else {
+                exception.printStackTrace();
+            }
+        });
+        System.out.println("Executed before response return...");
+        while (!completableFuture.isDone()) {
+            Thread.sleep(1000);
+        }
+        System.out.println("asyncTest Response: " + completableFuture.get());
 
     }
 }

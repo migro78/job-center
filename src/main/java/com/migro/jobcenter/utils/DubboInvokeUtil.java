@@ -3,10 +3,13 @@ package com.migro.jobcenter.utils;
 import com.alibaba.fastjson.JSON;
 import com.migro.jobcenter.core.DubboServiceFactory;
 import com.migro.jobcenter.model.SysJob;
+import org.apache.dubbo.rpc.RpcContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.doublewin.core.util.DataUtil;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -35,6 +38,13 @@ public class DubboInvokeUtil {
         logger.debug("invokeTarget is {},beanName is {},methodName is {},methodParams is {}",invokeTarget,beanName,methodName,methodParams);
         if (!BeanInvokeUtil.isValidClassName(beanName)) {
             throw new RuntimeException("Dubbo服务调用需要完整包名:" + beanName);
+        }
+
+        // 判断异步调用方式
+        if(DataUtil.isNotEmpty(sysJob.getAsync()) && sysJob.getAsync()==1){
+            // 异步调用
+            DubboServiceFactory.getInstance().genericAsyncInvoke(sysJob.getApplicationName(),beanName,methodName,methodParams);
+            return null;
         }
 
         return DubboServiceFactory.getInstance().genericInvoke(sysJob.getApplicationName(),beanName,methodName,methodParams);

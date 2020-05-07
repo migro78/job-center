@@ -22,9 +22,11 @@
 			<if test="cm.exceptionInfo != null and cm.exceptionInfo != ''">
 					and exception_info=#{cm.exceptionInfo}
 			</if>
-			<if test="cm.createTime != null">
-					and create_time &gt;=#{cm.createTimeStart}
-					and create_time &lt;=#{cm.createTimeEnd}
+			<if test="cm.searchTimeStart != null">
+					and create_time &gt;=#{cm.searchTimeStart}
+			</if>
+			<if test="cm.searchTimeEnd != null">
+					and create_time &lt;=#{cm.searchTimeEnd}
 			</if>
 			<if test="cm.keyword != null and cm.keyword != ''">
 				and (

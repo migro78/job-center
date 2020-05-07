@@ -48,6 +48,8 @@ public class SysJob extends BaseModel {
     private Integer invokeType;
     @ApiModelProperty(value = "dubbo应用名称")
     private String applicationName;
+    @ApiModelProperty(value = "异步调用 1--异步  0--同步")
+    private Integer async;
 
 
     public String getJobName() {
@@ -160,6 +162,14 @@ public class SysJob extends BaseModel {
 
     public void setApplicationName(String applicationName) {
         this.applicationName = applicationName;
+    }
+
+    public Integer getAsync() {
+        return async;
+    }
+
+    public void setAsync(Integer async) {
+        this.async = async;
     }
 
     public Date getNextValidTime() {

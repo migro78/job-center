@@ -6,6 +6,7 @@ import com.migro.jobcenter.model.SysJobLog;
 import com.migro.jobcenter.service.ISysJobLogService;
 import com.migro.jobcenter.utils.ScheduleConstants;
 import com.migro.jobcenter.utils.SpringUtils;
+import org.apache.dubbo.rpc.RpcContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
@@ -17,6 +18,9 @@ import top.doublewin.core.util.DataUtil;
 import top.doublewin.core.util.ExceptionUtil;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 抽象quartz调用
@@ -40,8 +44,8 @@ public abstract class AbstractQuartzJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         SysJob sysJob = new SysJob();
         Object param = context.getMergedJobDataMap().get(ScheduleConstants.TASK_PROPERTIES);
-        BeanUtils.copyProperties(param,sysJob);
-        logger.debug("从Quartz表读取Job任务配置信息：{}",JSON.toJSONString(sysJob));
+        BeanUtils.copyProperties(param, sysJob);
+        logger.debug("从Quartz表读取Job任务配置信息：{}", JSON.toJSONString(sysJob));
         try {
             before(context, sysJob);
             if (sysJob != null) {
@@ -71,19 +75,38 @@ public abstract class AbstractQuartzJob implements Job {
      * @param sysJob  系统计划任务
      */
     protected void after(JobExecutionContext context, SysJob sysJob, Exception e) {
-        Date startTime = threadLocal.get();
-        Object res = result.get();
-        threadLocal.remove();
-        result.remove();
 
         final SysJobLog sysJobLog = new SysJobLog();
         sysJobLog.setJobName(sysJob.getJobName());
         sysJobLog.setJobGroup(sysJob.getJobGroup());
         sysJobLog.setInvokeTarget(sysJob.getInvokeTarget());
-        sysJobLog.setStartTime(startTime);
-        sysJobLog.setStopTime(new Date());
-        sysJobLog.setJobMessage(res==null?"":JSON.toJSONString(res));
-        long runMs = sysJobLog.getStopTime().getTime() - sysJobLog.getStartTime().getTime();
+
+        // 调用异步处理过程
+        if (DataUtil.isNotEmpty(sysJob.getAsync()) && sysJob.getAsync() == 1) {
+            doAsyncAfter(sysJobLog, e);
+        } else {
+            // 调用同步处理过程
+            doSyncAfter(sysJobLog, e);
+        }
+
+        // 写入数据库当中
+        SpringUtils.getBean(ISysJobLogService.class).update(sysJobLog);
+    }
+
+    /**
+     * 同步调用后处理
+     *
+     * @param
+     * @return
+     */
+    private void doSyncAfter(SysJobLog sysJobLog, Exception e) {
+        Date startTime = threadLocal.get();
+        threadLocal.remove();
+        Object res = result.get();
+        result.remove();
+
+        sysJobLog.setJobMessage(res == null ? "执行失败" : JSON.toJSONString(res));
+        long runMs = System.currentTimeMillis() - startTime.getTime();
         sysJobLog.setTimeCost(runMs);
         if (e != null) {
             sysJobLog.setStatus(Constants.FAIL);
@@ -93,8 +116,70 @@ public abstract class AbstractQuartzJob implements Job {
             sysJobLog.setStatus(Constants.SUCCESS);
         }
 
-        // 写入数据库当中
-        SpringUtils.getBean(ISysJobLogService.class).update(sysJobLog);
+    }
+
+    /**
+     * 异步调用后处理
+     *
+     * @param
+     * @return
+     */
+    private void doAsyncAfter(SysJobLog sysJobLog, Exception e) {
+        Date startTime = threadLocal.get();
+        threadLocal.remove();
+        // 超时计时器
+        long count = 0;
+        // 超时时间设置
+        long timeOut = 2 * 60 * 1000;
+        // 异常信息记录
+        String errorMsg = null;
+        // 执行结果
+        Object res = null;
+
+        if (DataUtil.isEmpty(e)) {
+            CompletableFuture<Map> completableFuture = RpcContext.getContext().getCompletableFuture();
+            logger.debug("completableFuture 2:{}", completableFuture);
+            while (!completableFuture.isDone() && count < timeOut) {
+                try {
+                    Thread.sleep(1000);
+                    count = count + 1000;
+                    //logger.debug("count:{},completableFuture.isDone:{}", count, completableFuture.isDone());
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            // 判断超时
+            if (count >= timeOut) {
+                errorMsg = "异步调用等待超时，等待时长" + count + "ms";
+            } else {
+                try {
+                    // 获取异步调用结果
+                    res = completableFuture.get();
+                    logger.debug("异步调用结果============>>>>>>>>{}",res);
+                } catch (InterruptedException e1) {
+                    logger.error("获取异步执行结果异常1", e1);
+                    errorMsg = DataUtil.substring(ExceptionUtil.getStackTraceAsString(e1), 0, 2000);
+                } catch (ExecutionException e1) {
+                    logger.error("获取异步执行结果异常2", e1);
+                    errorMsg = DataUtil.substring(ExceptionUtil.getStackTraceAsString(e1), 0, 2000);
+                }
+            }
+            if (DataUtil.isNotEmpty(errorMsg)) {
+                sysJobLog.setStatus(Constants.FAIL);
+                sysJobLog.setExceptionInfo(errorMsg);
+            } else {
+                sysJobLog.setStatus(Constants.SUCCESS);
+            }
+        } else {
+            // job 层异常
+            sysJobLog.setStatus(Constants.FAIL);
+            errorMsg = DataUtil.substring(ExceptionUtil.getStackTraceAsString(e), 0, 2000);
+            sysJobLog.setExceptionInfo(errorMsg);
+        }
+
+        long runMs = System.currentTimeMillis() - startTime.getTime();
+        sysJobLog.setTimeCost(runMs);
+        sysJobLog.setJobMessage(res == null ? "执行失败" : JSON.toJSONString(res));
     }
 
     /**
