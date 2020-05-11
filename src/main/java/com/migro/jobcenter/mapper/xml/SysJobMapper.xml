@@ -73,5 +73,12 @@
 	<sql id="selectJob">
         select * from sys_job
     </sql>
+	
+	<select id="jobCount" resultType="com.migro.jobcenter.model.vo.MainPageVO">
+		select count(*) job_total,
+		sum(case status when 1 then 1 else 0 end) job_run,
+		sum(case status when 0 then 1 else 0 end) job_pause
+		from sys_job
+	</select>
 
 </mapper>

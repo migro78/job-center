@@ -2,6 +2,7 @@ package com.migro.jobcenter.service.impl;
 
 import com.migro.jobcenter.mapper.SysJobMapper;
 import com.migro.jobcenter.model.SysJob;
+import com.migro.jobcenter.model.vo.MainPageVO;
 import com.migro.jobcenter.service.ISysJobService;
 import com.migro.jobcenter.utils.CronUtils;
 import com.migro.jobcenter.utils.ScheduleConstants;
@@ -174,6 +175,11 @@ public class SysJobServiceImpl extends BaseService<SysJob, SysJobMapper> impleme
     @Override
     public boolean checkCronExpressionIsValid(String cronExpression) {
         return CronUtils.isValid(cronExpression);
+    }
+
+    @Override
+    public MainPageVO jobCount() {
+        return mapper.jobCount();
     }
 
     /**

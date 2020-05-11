@@ -1,6 +1,7 @@
 package com.migro.jobcenter.mapper;
 
 import com.migro.jobcenter.model.SysJob;
+import com.migro.jobcenter.model.vo.MainPageVO;
 import top.doublewin.core.base.BaseMapper;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface SysJobMapper extends BaseMapper<SysJob> {
      *
      * @return 调度任务列表
      */
-    public List<SysJob> selectJobAll();
+    List<SysJob> selectJobAll();
+
+    MainPageVO jobCount();
 
 }

@@ -1,6 +1,7 @@
 package com.migro.jobcenter.service;
 
 import com.migro.jobcenter.model.SysJob;
+import com.migro.jobcenter.model.vo.MainPageVO;
 import com.migro.jobcenter.utils.TaskException;
 import org.quartz.SchedulerException;
 import top.doublewin.core.base.IBaseService;
@@ -86,4 +87,11 @@ public interface ISysJobService extends IBaseService<SysJob> {
      * @return 结果
      */
     public boolean checkCronExpressionIsValid(String cronExpression);
+
+    /**
+     * 查询任务数量统计
+     * @param
+     * @return
+     */
+    MainPageVO jobCount();
 }

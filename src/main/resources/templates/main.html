@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,127 +13,308 @@
 </head>
 
 <body class="gray-bg">
-    <div class="row  border-bottom white-bg dashboard-header">
-        <div class="col-sm-12">
-            <blockquote class="text-warning" style="font-size:14px">
-                关键字：Quartz 任务中心 微服务 docker 开箱即用
-            </blockquote>
-
-            <hr>
+<div class="row  border-bottom white-bg dashboard-header">
+    <div>
+        <div class="col-md-2 column" align="center">
+            <h3>任务总数</h3>
+            <p></p>
+            <h1><span class="text text-success">[[${data.jobTotal}]]</span></h1>
         </div>
-        <div class="col-sm-5">
-            <h2>任务管理中心</h2>
-            <p>基于Quartz框架的任务管理中心，提供简单的任务创建、修改、启停、删除操作，并且记录任务执行结果，方便查询跟踪。提供docker镜像，实现开箱即用</p>
-            <p>
-                <b>当前版本：</b><span>v[[${version}]]</span>
-            </p>
-            <br>
-            <p>
-                <a class="btn btn-success btn-outline" href="https://github.com/migro78/job-center" target="_blank">
-                    <i class="fa fa-cloud"> </i> 访问源码
-                </a>
-                <a class="btn btn-white btn-bitbucket" href="#" target="_blank">
-                    <i class="fa fa-home"></i> 访问主页
-                </a>
-            </p>
+        <div class="col-md-2 column" align="center">
+            <h3>运行任务</h3>
+            <p></p>
+            <h1><span class="text text-info">[[${data.jobRun}]]</span></h1>
+        </div>
+        <div class="col-md-2 column" align="center">
+            <h3>暂停任务</h3>
+            <p></p>
+            <h1><span class="text text-warning">[[${data.jobPause}]]</span></h1>
+        </div>
+        <div class="col-md-2 column" align="center">
+            <h3>任务执行次数</h3>
+            <p></p>
+            <h1><span class="text text-success">[[${data.logsTotal}]]</span></h1>
+        </div>
+        <div class="col-md-2 column" align="center">
+            <h3>成功次数</h3>
+            <p></p>
+            <h1><span class="text text-info">[[${data.logsSuccess}]]</span></h1>
+        </div>
+        <div class="col-md-2 column" align="center">
+            <h3>失败次数</h3>
+            <p></p>
+            <h1><span class="text text-danger">[[${data.logsError}]]</span></h1>
+        </div>
+    </div>
+</div>
+<div class="row  border-bottom white-bg dashboard-header">
+    <div class="col-sm-8" id="barchart" style="height:400px;">
+
+    </div>
+    <div class="col-sm-4">
+        <table class="table table-bordered" th:with="type=${data.slowLogList}">
+            <thead>
+            <tr>
+                <th>任务名称</th>
+                <th>执行时间</th>
+                <th>耗时（毫秒）</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="recd : ${type}">
+                <td th:text="${recd.jobName}">Tanmay</td>
+                <td th:text="${#dates.format(recd.createTime,'yyyy-MM-dd HH:mm:ss')}">2020-05-01 13:12:35</td>
+                <td th:utext="${recd.status == 1 ? '<span class=''label label-primary''>成功</span>' : '<span class=''label label-danger''>失败</span>'}+' '+${recd.timeCost}">560001</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-4">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>系统介绍</h5>
+                </div>
+                <div class="ibox-content">
+                    <p>基于Quartz框架的任务管理中心，提供简单的任务创建、修改、启停、删除操作，并且记录任务执行结果，方便查询跟踪。提供docker镜像，实现开箱即用</p>
+                    <p>
+                        <b>当前版本：</b><span>v[[${version}]]</span>
+                    </p>
+                    <br>
+                    <p>
+                        <a class="btn btn-success btn-outline" href="https://github.com/migro78/job-center"
+                           target="_blank">
+                            <i class="fa fa-cloud"> </i> 访问源码
+                        </a>
+                        <a class="btn btn-white btn-bitbucket" href="#" target="_blank">
+                            <i class="fa fa-home"></i> 访问主页
+                        </a>
+                    </p>
+                    <p><i class="fa fa-send-o"></i> 官网：
+                    </p>
+                    <p><i class="fa fa-qq"></i> QQ: 17339200
+                    </p>
+                    <p><i class="fa fa-weixin"></i> 微信：
+                    </p>
+                    <p><i class="fa fa-credit-card"></i> 支付宝：
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="col-sm-4">
-            <h4>技术选型：</h4>
-            <ol>
-                <li>核心框架：Spring Boot。</li>
-                <li>RPC框架：Apache Dubbo。</li>
-                <li>模板引擎：Thymeleaf。</li>
-                <li>持久层框架：MyBatis。</li>
-				<li>定时任务:Quartz。</li>
-                <li>数据库连接池：Druid。</li>
-                <li>工具类：Fastjson。</li>
-                <li>更多……</li>
-            </ol>
-        </div>
-
-    </div>
-    <div class="wrapper wrapper-content">
-        <div class="row">
-            <div class="col-sm-4">
-
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>联系信息</h5>
-
-                    </div>
-                    <div class="ibox-content">
-                        <p><i class="fa fa-send-o"></i> 官网：
-                        </p>
-                        <p><i class="fa fa-qq"></i> QQ群:
-                        </p>
-                        <p><i class="fa fa-weixin"></i> 微信：
-                        </p>
-                        <p><i class="fa fa-credit-card"></i> 支付宝：
-                        </p>
-                    </div>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>更新日志</h5>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>更新日志</h5>
-                    </div>
-                    <div class="ibox-content no-padding">
-                        <div class="panel-body">
-                            <div class="panel-group" id="version">
+                <div class="ibox-content no-padding">
+                    <div class="panel-body">
+                        <div class="panel-group" id="version">
                             <div class="panel panel-default">
-								<div class="panel-heading">
-								   <h5 class="panel-title">
-									   <a data-toggle="collapse" data-parent="#version" href="#v41">v1.0.0</a><code class="pull-right">2020.04.27</code>
-								   </h5>
-								</div>
-								<div id="v41" class="panel-collapse collapse in">
-									<div class="panel-body">
-									   <ol>
-									        <li>定时任务支持RPC远程服务调用</li>
-                                           <li>支持zookeeper和nacos的RPC注册中心</li>
-                                           <li>支持定时任务的增删改查，状态启停</li>
-                                           <li>支持任务执行记录和结果的查询</li>
-										</ol>
-									</div>
-								</div>
-							 </div>
-							</div>
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#version" href="#v41">v1.0.0</a><code
+                                            class="pull-right">2020.04.27</code>
+                                    </h5>
+                                </div>
+                                <div id="v41" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ol>
+                                            <li>支持dubbo RPC同步和异步远程服务调用</li>
+                                            <li>支持zookeeper和nacos的RPC注册中心</li>
+                                            <li>支持定时任务的增删改查，状态启停</li>
+                                            <li>支持任务执行记录和结果的查询</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>感谢</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="alert alert-warning">
-                            	若依框架
-                        </div>
-
-
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>感谢</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="alert alert-warning">
+                        若依框架
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
     </div>
-    <script th:src="@{/js/jquery.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
-    <script type="text/javascript">
-	    $('#pay-qrcode').click(function(){
-	        var html=$(this).html();
-	        parent.layer.open({
-	            title: false,
-	            type: 1,
-	            closeBtn:false,
-	            shadeClose:true,
-	            area: ['600px', 'auto'],
-	            content: html
-	        });
-	    });
-    </script>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+<script type="text/javascript">
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('barchart'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        backgroundColor: '#323a5e',
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '2%',
+            right: '4%',
+            bottom: '14%',
+            top: '16%',
+            containLabel: true
+        },
+        legend: {
+            data: ['成功次数', '失败次数'],
+            right: 10,
+            top: 12,
+            textStyle: {
+                color: "#fff"
+            },
+            itemWidth: 12,
+            itemHeight: 10,
+            // itemGap: 35
+        },
+        xAxis: {
+            type: 'category',
+            data: [(${data.logsPerDay[0]})],
+            axisLine: {
+                lineStyle: {
+                    color: 'white'
+
+                }
+            },
+            axisLabel: {
+                // interval: 0,
+                // rotate: 40,
+                textStyle: {
+                    fontFamily: 'Microsoft YaHei'
+                }
+            },
+        },
+
+        yAxis: {
+            type: 'value',
+            max: [[${data.max}]],
+            axisLine: {
+                show: false,
+                lineStyle: {
+                    color: 'white'
+                }
+            },
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: 'rgba(255,255,255,0.3)'
+                }
+            },
+            axisLabel: {}
+        },
+        "dataZoom": [{
+            "show": true,
+            "height": 12,
+            "xAxisIndex": [
+                0
+            ],
+            bottom: '8%',
+            "start": 10,
+            "end": 90,
+            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+            handleSize: '110%',
+            handleStyle: {
+                color: "#d3dee5",
+
+            },
+            textStyle: {
+                color: "#fff"
+            },
+            borderColor: "#90979c"
+        }, {
+            "type": "inside",
+            "show": true,
+            "height": 15,
+            "start": 1,
+            "end": 35
+        }],
+        series: [
+            {
+                name: '成功次数',
+                type: 'bar',
+                barWidth: '15%',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#248ff7'
+                        }, {
+                            offset: 1,
+                            color: '#6851f1'
+                        }]),
+                        barBorderRadius: 11,
+                    }
+                },
+                data: [(${data.logsPerDay[1]})]
+            }, {
+                name: '失败次数',
+                type: 'bar',
+                barWidth: '15%',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#fccb05'
+                        }, {
+                            offset: 1,
+                            color: '#f5804d'
+                        }]),
+                        barBorderRadius: 12,
+                    },
+                },
+                data: [(${data.logsPerDay[2]})]
+            }]
+    };
+    var app = {
+        currentIndex: -1,
+    };
+    setInterval(function () {
+        var dataLen = option.series[0].data.length;
+        // 取消之前高亮的图形
+        myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: app.currentIndex
+        });
+        app.currentIndex = (app.currentIndex + 1) % dataLen;
+        //console.log(app.currentIndex);
+        // 高亮当前图形
+        myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: app.currentIndex,
+        });
+        // 显示 tooltip
+        myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: app.currentIndex
+        });
+    }, 1000);
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
 </body>
 </html>
