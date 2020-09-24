@@ -89,6 +89,11 @@
             <artifactId>postgresql</artifactId>
             <version>9.3-1102-jdbc41</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
 
         <!-- swagger2 -->
         <dependency>
