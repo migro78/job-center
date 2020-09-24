@@ -239,4 +239,18 @@ CREATE INDEX IDX_QRTZ_FT_JG ON QRTZ_FIRED_TRIGGERS(SCHED_NAME,JOB_GROUP);
 CREATE INDEX IDX_QRTZ_FT_T_G ON QRTZ_FIRED_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP);
 CREATE INDEX IDX_QRTZ_FT_TG ON QRTZ_FIRED_TRIGGERS(SCHED_NAME,TRIGGER_GROUP);
 
+/*==============================================================*/
+/* 函数                                         */
+/*==============================================================*/
+
+DELIMITER $$
+CREATE FUNCTION to_char(dates datetime,format varchar(20)) RETURNS VARCHAR(255)
+BEGIN
+	SET @sal=''; #定义用户变量
+	SELECT DATE_FORMAT(dates,'%Y-%m-%d') INTO @sal ;  #赋值
+
+	RETURN @sal;
+END $$
+
+
 commit;
