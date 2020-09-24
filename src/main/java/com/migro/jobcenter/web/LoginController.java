@@ -147,7 +147,17 @@ public class LoginController extends BaseController<Users, IUsersService> {
             days[1] = JSON.toJSONString(succ);
             days[2] = JSON.toJSONString(err);
             jobCount.setLogsPerDay(days);
-            jobCount.setMax((max / 200 + 1) * 200);
+            jobCount.setMax(getTag(max));
+        } else {
+            String[] days = new String[3];
+            String[] time = {endTime};
+            Integer[] succ = {0};
+            Integer[] err = {0};
+            days[0] = JSON.toJSONString(time).replaceAll("\"", "'");
+            days[1] = JSON.toJSONString(succ);
+            days[2] = JSON.toJSONString(err);
+            jobCount.setLogsPerDay(days);
+            jobCount.setMax(3);
         }
 
         // 耗时任务排行
@@ -157,6 +167,23 @@ public class LoginController extends BaseController<Users, IUsersService> {
         mmap.put("data", jobCount);
         mmap.put("version", "1.0.0");
         return "main";
+    }
+
+    private int getTag(int max) {
+        int ret = 0;
+        if (max < 10) {
+            ret = 10;
+        } else if (max < 100) {
+            ret = ((max / 20) + 1) * 20;
+        } else if(max < 400){
+            ret = ((max / 100) + 1) * 100;
+        } else if(max < 1000){
+            ret = ((max / 200) + 1) * 200;
+        } else if(max < 4000){
+            ret = ((max / 500) + 1) * 500;
+        }
+
+        return ret;
     }
 
 }
