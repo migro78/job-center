@@ -1,0 +1,38 @@
+server:
+  port: 8099
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/job_center?serverTimezone=Asia/Shanghai&useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: mysql
+    password: mysql
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: Scheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+            dataSource: quartzDs
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: JDBC
+    #初始化表结构
+    jdbc:
+      initialize-schema: NEVER
+
+job:
+  dubbo-regist-url: zookeeper://zookeeper:2181

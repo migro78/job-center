@@ -1,7 +1,9 @@
 package com.migro.jobcenter.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.migro.jobcenter.model.SysJobLog;
 import com.migro.jobcenter.model.vo.MainPageVO;
+import org.apache.ibatis.annotations.Param;
 import top.doublewin.core.base.BaseMapper;
 
 import java.util.List;
@@ -22,5 +24,5 @@ public interface SysJobLogMapper extends BaseMapper<SysJobLog> {
 
     List<MainPageVO> dayLogs(Map<String,Object> param);
 
-    List<SysJobLog> slowLogs(Map<String,Object> param);
+    List<SysJobLog> slowLogs(Page page, @Param("cm") Map<String, Object> params);
 }

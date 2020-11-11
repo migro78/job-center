@@ -80,13 +80,13 @@
 	<select id="slowLogs" resultType="com.migro.jobcenter.model.SysJobLog">
 		select id,job_name,status,time_cost,create_time from sys_job_log t
 		<where>
-			<if test="startTime != null">
-				and to_char(t.create_time,'YYYY-MM-DD') &gt;= #{startTime}
+			<if test="cm.startTime != null">
+				and to_char(t.create_time,'YYYY-MM-DD') &gt;= #{cm.startTime}
 			</if>
-			<if test="endTime != null">
-				and to_char(t.create_time,'YYYY-MM-DD') &lt;= #{endTime}
+			<if test="cm.endTime != null">
+				and to_char(t.create_time,'YYYY-MM-DD') &lt;= #{cm.endTime}
 			</if>
 		</where>
-		order by time_cost desc limit 10
+		order by time_cost desc
 	</select>
 </mapper>

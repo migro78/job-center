@@ -40,6 +40,8 @@ public class SysJobLogServiceImpl extends BaseService<SysJobLog, SysJobLogMapper
 
     @Override
     public List<SysJobLog> slowLogs(Map<String, Object> param) {
-        return mapper.slowLogs(param);
+        //return mapper.slowLogs(param);
+        List<SysJobLog> list = (List<SysJobLog>)super.pagingQuery("slowLogs",param,null);
+        return list;
     }
 }
