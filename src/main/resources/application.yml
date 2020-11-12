@@ -4,10 +4,10 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.0.150:5432/job_center
-    username: allways
-    password: allways@2018
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@192.168.0.81:1521:mtl
+    username: JOBCENTER
+    password: JOBCENTER
   quartz:
     properties:
       org:
@@ -17,7 +17,7 @@ spring:
             instanceId: AUTO
           jobStore:
             class: org.quartz.impl.jdbcjobstore.JobStoreTX
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
             tablePrefix: QRTZ_
             isClustered: true
             clusterCheckinInterval: 10000
@@ -36,6 +36,3 @@ spring:
 
 job:
   dubbo-regist-url: zookeeper://127.0.0.1:2181
-
-
-
