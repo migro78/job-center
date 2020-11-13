@@ -60,7 +60,7 @@ dubbo:
     address: zookeeper://127.0.0.1:2181
   protocol:     #协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受。
     name: dubbo
-    port: 20898
+    port: 20890
     dispatcher: message
     threadpool: cached
     threads: 500    #线程池
