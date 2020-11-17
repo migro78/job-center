@@ -15,6 +15,7 @@ import top.doublewin.core.util.DataUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -24,18 +25,31 @@ import java.util.Map;
  * @author migro
  * @since 2020/11/12 15:07
  */
-@Service(interfaceClass = IOrderService.class)
+@Service(interfaceClass = IOrderService.class, timeout = 60000)
 @Component
 public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implements IOrderService {
+
+    @Override
+    public CompletableFuture<Map> asyncUploadOrder(Map param) {
+        // RpcContext savedContext = RpcContext.getContext();
+        // 建议为supplyAsync提供自定义线程池，避免使用JDK公用线程池
+        return CompletableFuture.supplyAsync(() -> {
+            // logger.debug("RpcContext Attachment:consumer-key1,value is {}", savedContext.getAttachment("consumer-key1"));
+            String ret = uploadOrder(param);
+            param.put("msg", ret);
+            logger.debug("asyncUploadOrder completed...! result is {}",ret);
+            return param;
+        });
+    }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String listOrder(Map<String, Object> param) {
+    public String uploadOrder(Map param) {
         // 分页查询订单主表
         IPage<OrderVO> page = super.pagingQuery(param);
         List<OrderVO> list = page.getRecords();
-
+        logger.debug("轮询采购订单，新订单数量 {}", list.size());
         if (DataUtil.isEmpty(list)) {
             return "执行成功，上传订单数量0条.";
         }
@@ -54,11 +68,11 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
 
         // 更新消息表状态
         list.stream().forEach(t -> {
-            if(DataUtil.isNotEmpty(t.getMsgId())){
+            if (DataUtil.isNotEmpty(t.getMsgId())) {
                 mapper.updateMsgStatus(t.getMsgId());
             }
         });
 
-        return "执行成功，上传订单数量"+list.size()+"条.";
+        return "执行成功，上传订单数量" + list.size() + "条.";
     }
 }

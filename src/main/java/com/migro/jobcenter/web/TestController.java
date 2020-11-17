@@ -28,11 +28,6 @@ import java.util.Map;
 @Api(value = "接口测试", description = "接口测试" ,tags = {"接口测试"})
 public class TestController extends BaseController<OrderVO, IOrderService> {
 
-    @PutMapping("listOrder")
-    @ApiOperation(value = "查询待处理订单")
-    public Object listOrder(ModelMap modelMap, @RequestBody Map<String,Object> param) {
-        return setSuccessModelMap(modelMap,service.listOrder(param));
-    }
 
     @PutMapping("getAccessToken")
     @ApiOperation(value = "登录获取授权码")
@@ -44,8 +39,7 @@ public class TestController extends BaseController<OrderVO, IOrderService> {
     @PutMapping("uploadOrder")
     @ApiOperation(value = "上传订单")
     public Object uploadOrder(ModelMap modelMap, @RequestBody Map<String,Object> param) {
-        service.listOrder(param);
-        return setSuccessModelMap(modelMap);
+        return setSuccessModelMap(modelMap,service.uploadOrder(param));
     }
 
 }

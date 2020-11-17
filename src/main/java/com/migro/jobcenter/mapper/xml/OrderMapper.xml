@@ -3,14 +3,14 @@
 <mapper namespace="com.migro.jobcenter.mapper.OrderMapper">
     <select id="pagingQuery" resultType="com.migro.jobcenter.model.vo.OrderVO" useCache="false">
         select o.ORDER_ID code,k.DEPT_NAME rec_stock, o.SUPPLIER_ID sup_id,s.SUPPLIER_NAME sup_name,o.ORDER_TIME create_time,
-        o.SUBMIT_USER sub_user,o.SUBMIT_TIME sub_time,o.TAKE_ADDRESS rec_addr,o.TAKER rec_user,m.ID msg_id
+        o.SUBMIT_USER sub_user,o.SUBMIT_TIME sub_time,o.TAKE_ADDRESS rec_addr,o.TAKER rec_user,m.ID msg_id,DECODE(o.ORDER_CLASS,'3','2','1') ord_type
 
         from BILL_PURCHASE_ORDER o
         JOIN INTERFACE_MSG m on m.DATA_CODE = o.ORDER_ID
         LEFT JOIN DIC_SUPPLIER s on s.SUPPLIER_ID = o.SUPPLIER_ID
         LEFT JOIN DIC_DEPT k on k.DEPT_CODE = o.DEPT_CODE
         <where>
-
+            m.status = 0
         </where>
         <if test="cm.orderBy != null and cm.orderBy != ''">
             order by ${cm.orderBy}
@@ -20,7 +20,7 @@
         </if>
     </select>
     <select id="listDetails" resultType="com.migro.jobcenter.model.vo.OrderDetailVO" useCache="false">
-        select d.ORDER_ID code,d.ITEM_NO serial_no,d.MATERIAL_CODE mat_code,d.MATERIAL_NAME mat_name,
+        select d.ORDER_ID code,d.ITEM_NO serial_no,d.BD_CODE mat_code,d.MATERIAL_NAME mat_name,
         d.SPEC,d.UNIT,d.PLAN_NUM pur_num,d.PURCHASE_PRICE price,f.FACTORY_NAME factory
 
         from BILL_PURCHASE_ORDER_DETAIL d

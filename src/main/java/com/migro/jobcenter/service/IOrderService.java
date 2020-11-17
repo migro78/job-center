@@ -3,8 +3,8 @@ package com.migro.jobcenter.service;
 import com.migro.jobcenter.model.vo.OrderVO;
 import top.doublewin.core.base.IBaseService;
 
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -16,9 +16,16 @@ import java.util.Map;
  */
 public interface IOrderService extends IBaseService<OrderVO> {
     /**
-     * 查询待处理订单列表
+     * 订单上传
      * @param
      * @return
      */
-    String listOrder(Map<String,Object> param);
+    String uploadOrder(Map<String,Object> param);
+
+    /**
+     * 订单上传（异步执行）
+     * @param
+     * @return
+     */
+    CompletableFuture<Map> asyncUploadOrder(Map param);
 }
