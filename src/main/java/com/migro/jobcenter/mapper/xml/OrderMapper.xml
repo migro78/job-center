@@ -34,6 +34,6 @@
         order by d.ORDER_ID,d.ITEM_NO
     </select>
     <update id="updateMsgStatus">
-        update INTERFACE_MSG set status = 1,update_time = sysdate where id = #{id}
+        update INTERFACE_MSG set status = #{status},update_time = sysdate where id = #{id}
     </update>
 </mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.migro.jobcenter.mapper.BillPurchaseOrderResponseMapper">
+	<select id="pagingQuery" resultType="com.migro.jobcenter.model.BillPurchaseOrderResponse" useCache="false">
+		select t.* from BILL_PURCHASE_ORDER_RESPONSE t
+		<where>
+            <if test="cm.id != null">
+                  and t.id=#{cm.id}
+            </if>
+			<if test="cm.plOrderId != null and cm.plOrderId != ''">
+                  and t.PL_ORDER_ID=#{cm.plOrderId}
+			</if>
+			<if test="cm.orderId != null and cm.orderId != ''">
+                  and t.ORDER_ID=#{cm.orderId}
+			</if>
+			<if test="cm.planId != null and cm.planId != ''">
+                  and t.PLAN_ID=#{cm.planId}
+			</if>
+			<if test="cm.materialCode != null and cm.materialCode != ''">
+                  and t.MATERIAL_CODE=#{cm.materialCode}
+			</if>
+			<if test="cm.respNum != null and cm.respNum != ''">
+                  and t.RESP_NUM=#{cm.respNum}
+			</if>
+			<if test="cm.bdCode != null and cm.bdCode != ''">
+                  and t.BD_CODE=#{cm.bdCode}
+			</if>
+            <if test="cm.createTimeStart != null">
+                  and t.create_time &gt;= #{cm.createTimeStart}
+                  and t.create_time &lt;= #{cm.createTimeEnd}
+            </if>
+            <if test="cm.updateTimeStart != null">
+                  and t.update_time &gt;= #{cm.updateTimeStart}
+                  and t.update_time &lt;= #{cm.updateTimeEnd}
+            </if>
+
+			<if test="cm.keyword != null and cm.keyword != ''">
+                  and (
+                      t.PL_ORDER_ID like CONCAT('%',#{cm.keyword},'%')
+                      or  t.ORDER_ID like CONCAT('%',#{cm.keyword},'%')
+                      or  t.PLAN_ID like CONCAT('%',#{cm.keyword},'%')
+                      or  t.MATERIAL_CODE like CONCAT('%',#{cm.keyword},'%')
+                      or  t.RESP_NUM like CONCAT('%',#{cm.keyword},'%')
+                      or  t.BD_CODE like CONCAT('%',#{cm.keyword},'%')
+                  )
+			</if>
+		</where>
+        <if test="cm.orderBy != null and cm.orderBy != ''">
+            order by t.${cm.orderBy}
+        </if>
+		<if test="cm.sortAsc != null and cm.sortAsc != ''">
+			${cm.sortAsc}
+		</if>
+	</select>
+    <select id="insertResponseData">
+        INSERT INTO BILL_PURCHASE_ORDER_RESPONSE ( PL_ORDER_ID, ORDER_ID, RESP_NUM, RESP_TIME, BD_CODE )
+            VALUES ( #{plOrderId}, #{orderId}, #{respNum}, #{respTime}, #{bdCode} )
+    </select>
+    <select id="insertDelivery">
+        
+    </select>
+    <select id="deleteDelivery">
+
+    </select>
+    <select id="insertDeliveryDetail">
+
+    </select>
+    <select id="deleteDeliveryDetail">
+
+    </select>
+
+</mapper>

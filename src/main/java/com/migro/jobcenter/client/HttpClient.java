@@ -11,7 +11,6 @@ import top.doublewin.core.util.DataUtil;
 import top.doublewin.core.util.HttpUtil;
 
 import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +32,16 @@ public class HttpClient {
      * URL 统一数据上传
      */
     private static final String URL_DATA_UPLOAD = "/interface/unifiedDataUpload";
+
+    /**
+     * URL 统一数据下载
+     */
+    private static final String URL_DATA_DOWNLOAD = "/interface/unifiedDataDownload";
+
+    /**
+     * URL 统一检查数据更新
+     */
+    private static final String URL_CHECK_UPDATE = "/interface/checkUpdate";
 
     private static Base64.Encoder encoder = Base64.getEncoder();
 
@@ -60,31 +69,71 @@ public class HttpClient {
     }
 
     /**
-     * 订单上传
+     * 检测token
      *
      * @param
      * @return
      */
-    public static String uploadOrders(List orderList) {
-        UnifiedInterfaceDataVO vo = new UnifiedInterfaceDataVO();
-        vo.setDataType(DataType.订单.value());
-        vo.setDataInOut(DataInOut.平台.value());
-        vo.setCount(orderList.size());
-        vo.setDataContent(encoder.encodeToString(JSON.toJSONString(orderList).getBytes()));
-        // 包装请求头
+    private static void checkToken() {
         if (DataUtil.isEmpty(GlobalParams.getAccessToken())) {
             GlobalParams.setAccessToken(getAccessToken());
-            logger.debug("token为空，从新获取token==>{}", GlobalParams.getAccessToken());
-        } else {
-            logger.debug("使用已有token==>{}", GlobalParams.getAccessToken());
         }
-        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+    }
 
+    /**
+     * 统一数据上传
+     *
+     * @param
+     * @return
+     */
+    public static String uploadData(UnifiedInterfaceDataVO vo) {
+        // 对数据内容加密
+        vo.setDataContent(encoder.encodeToString(vo.getDataContent().getBytes()));
+        // 检测token
+        checkToken();
+        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
         String resp = HttpUtil.post(GlobalParams.getHost() + URL_DATA_UPLOAD, JSON.toJSONString(vo), header);
         // 解析响应结果
         parseResponse(resp);
-
         return resp;
+    }
+
+    /**
+     * 统一检查数据更新
+     *
+     * @param
+     * @return 数据类型 dataType
+     */
+    public static Integer checkUpdate() {
+        // 检测token
+        checkToken();
+        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+        String resp = HttpUtil.post(GlobalParams.getHost() + URL_CHECK_UPDATE, JSON.toJSONString(DataBuilder.map().build()), header);
+        // 解析响应结果
+        JSONObject obj = parseResponse(resp);
+        JSONObject data = obj.getJSONObject("data");
+        if (DataUtil.isNotEmpty(data)) {
+            return data.getInteger("dataType");
+        }
+        return null;
+    }
+
+    /**
+     * 统一数据下载
+     *
+     * @param
+     * @return
+     */
+    public static UnifiedInterfaceDataVO downloadData(Integer dataType) {
+        // 根据数据类型向服务器下载更新数据
+        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+        String resp = HttpUtil.post(GlobalParams.getHost() + URL_DATA_DOWNLOAD,
+                JSON.toJSONString(DataBuilder.map().put("dataType", dataType).build()), header);
+        // 解析响应结果
+        JSONObject obj = parseResponse(resp);
+        // 转成VO对象
+        UnifiedInterfaceDataVO vo = obj.getObject("data",UnifiedInterfaceDataVO.class);
+        return vo;
     }
 
     /**

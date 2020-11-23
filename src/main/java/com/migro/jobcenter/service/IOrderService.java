@@ -17,15 +17,19 @@ import java.util.concurrent.CompletableFuture;
 public interface IOrderService extends IBaseService<OrderVO> {
     /**
      * 订单上传
+     *
      * @param
      * @return
      */
-    String uploadOrder(Map<String,Object> param);
+    String uploadOrder(Map<String, Object> param);
+
 
     /**
-     * 订单上传（异步执行）
+     * 数据下载更新
+     *
      * @param
      * @return
      */
-    CompletableFuture<Map> asyncUploadOrder(Map param);
+    String dataDownload(Map<String, Object> param);
+
 }

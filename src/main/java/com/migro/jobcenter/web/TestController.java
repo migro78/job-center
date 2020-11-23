@@ -36,6 +36,13 @@ public class TestController extends BaseController<OrderVO, IOrderService> {
         return setSuccessModelMap(modelMap,ret);
     }
 
+    @PutMapping("checkUpdate")
+    @ApiOperation(value = "检查数据更新")
+    public Object checkUpdate(ModelMap modelMap, @RequestBody Map<String,Object> param) {
+        Integer ret = HttpClient.checkUpdate();
+        return setSuccessModelMap(modelMap,ret);
+    }
+
     @PutMapping("uploadOrder")
     @ApiOperation(value = "上传订单")
     public Object uploadOrder(ModelMap modelMap, @RequestBody Map<String,Object> param) {

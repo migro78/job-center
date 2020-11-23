@@ -29,6 +29,6 @@ public interface OrderMapper extends BaseMapper<OrderVO> {
      * @param
      * @return
      */
-    void updateMsgStatus(String id);
+    void updateMsgStatus(Map<String,Object> param);
 
 }
