@@ -9,7 +9,10 @@ import com.migro.jobcenter.client.DataType;
 import com.migro.jobcenter.client.HttpClient;
 import com.migro.jobcenter.enums.MsgDataType;
 import com.migro.jobcenter.mapper.OrderMapper;
+import com.migro.jobcenter.model.BdMaterial;
+import com.migro.jobcenter.model.BdMaterialVar;
 import com.migro.jobcenter.model.PurDelivery;
+import com.migro.jobcenter.model.SupOrgInfo;
 import com.migro.jobcenter.model.vo.*;
 import com.migro.jobcenter.service.IBillPurchaseOrderResponseService;
 import com.migro.jobcenter.service.IOrderService;
@@ -114,6 +117,25 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
                     ret = responseService.importDelivery(list);
                     return ret;
                 }
+
+                if(dataType == MsgDataType.耗材字典.value()){
+                    List<BdMaterial> list = JSON.parseArray(data,BdMaterial.class);
+                    ret = responseService.importMaterial(list);
+                    return ret;
+                }
+
+                if(dataType == MsgDataType.耗材品种.value()){
+                    List<BdMaterialVar> list = JSON.parseArray(data,BdMaterialVar.class);
+                    ret = responseService.importMaterialVar(list);
+                    return ret;
+                }
+
+                if(dataType == MsgDataType.供应商.value()){
+                    List<SupOrgInfo> list = JSON.parseArray(data,SupOrgInfo.class);
+                    ret = responseService.importSupply(list);
+                    return ret;
+                }
+
             }
 
 

@@ -1,7 +1,6 @@
 package com.migro.jobcenter.mapper;
 
-import com.migro.jobcenter.model.BillPurchaseOrderResponse;
-import com.migro.jobcenter.model.PurDeliveryDetails;
+import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.PurDeliveryVO;
 import top.doublewin.core.base.BaseMapper;
 /**
@@ -22,5 +21,17 @@ public interface BillPurchaseOrderResponseMapper extends BaseMapper<BillPurchase
 
     void insertDeliveryDetail(PurDeliveryDetails param);
 
-    void deleteDeliveryDetail(PurDeliveryDetails param);
+    void deleteDeliveryDetail(PurDeliveryVO param);
+
+    void insertMaterial(BdMaterial param);
+
+    void deleteMaterial(BdMaterial param);
+
+    void insertMaterialVar(BdMaterialVar param);
+
+    void deleteMaterialVar(BdMaterialVar param);
+
+    void insertSupply(SupOrgInfo param);
+
+    void deleteSupply(SupOrgInfo param);
 }

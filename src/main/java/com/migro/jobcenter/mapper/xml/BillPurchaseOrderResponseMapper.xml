@@ -57,15 +57,51 @@
             VALUES ( #{plOrderId}, #{orderId}, #{respNum}, #{respTime}, #{bdCode} )
     </select>
     <select id="insertDelivery">
-        
+        insert into bill_purchase_delivery
+          (ship_id, order_id, supplier_id, load_id, sender,
+          sender_phone, ship_store, ship_time, taker, taker_phone,
+          take_address, taker_store, operate, operate_time, status)
+        values
+          (#{id}, #{ordNo}, #{supId}, #{loadNo}, #{sender,jdbcType=VARCHAR},
+          #{senderTel,jdbcType=VARCHAR}, #{shipStore,jdbcType=VARCHAR}, #{shipTime,jdbcType=DATE}, #{taker,jdbcType=VARCHAR}, #{takerTel,jdbcType=VARCHAR},
+          #{takerAddr,jdbcType=VARCHAR}, #{takerStore,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime}, '1')
     </select>
     <select id="deleteDelivery">
-
+        delete from bill_purchase_delivery where ship_id = #{id}
     </select>
     <select id="insertDeliveryDetail">
-
+        insert into bill_purchase_delivery_detail
+          (id, ship_id, material_code, material_name,
+          factory_code, spec, unit, item_no,
+          num, batch_no, batch_lot, validity_date, production_date,
+          purchase_price, is_pack, pack_type, pack_no, pack_num,
+          pack_quantity, order_id, pl_order_id, invoice_no, invoice_time,status)
+        values
+          (#{id}, #{shipId}, (SELECT MATERIAL_CODE FROM DIC_MATERIAL where BD_CODE=#{matCode}),#{matName},
+          (select FACTORY_CODE from BILL_PURCHASE_ORDER_DETAIL where ORDER_ID=#{ordNo} and MATERIAL_CODE=#{matId}), #{spec}, #{unit,jdbcType=VARCHAR}, 1,
+          #{sendNum}, #{batchNo}, #{batchLot}, #{validDate}, #{prodDate},
+          #{price}, #{isPkg,jdbcType=DECIMAL}, #{pkgType}, #{pkgNo}, #{pkgNum},
+          #{pkgCapacity}, #{ordNo}, #{id}, #{invoiceNo}, #{invoiceTime},0)
     </select>
     <select id="deleteDeliveryDetail">
+        delete from bill_purchase_delivery_detail where ship_id = #{id}
+    </select>
+    <select id="insertMaterial">
+
+    </select>
+    <select id="deleteMaterial">
+
+    </select>
+    <select id="insertMaterialVar">
+
+    </select>
+    <select id="deleteMaterialVar">
+
+    </select>
+    <select id="insertSupply">
+
+    </select>
+    <select id="deleteSupply">
 
     </select>
 

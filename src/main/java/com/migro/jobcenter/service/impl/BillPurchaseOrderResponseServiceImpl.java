@@ -1,17 +1,14 @@
 package com.migro.jobcenter.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.migro.jobcenter.model.BillPurchaseOrderResponse;
 import com.migro.jobcenter.mapper.BillPurchaseOrderResponseMapper;
-import com.migro.jobcenter.model.PurResponseDetails;
+import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.PurDeliveryVO;
 import com.migro.jobcenter.model.vo.PurResponseVO;
 import com.migro.jobcenter.service.IBillPurchaseOrderResponseService;
-import org.springframework.transaction.annotation.Transactional;
-import top.doublewin.core.base.BaseService;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import top.doublewin.core.base.BaseService;
 import top.doublewin.core.util.DataUtil;
 
 import java.util.Date;
@@ -60,16 +57,73 @@ public class BillPurchaseOrderResponseServiceImpl extends BaseService<BillPurcha
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String importDelivery(List<PurDeliveryVO> list) {
         if (DataUtil.isNotEmpty(list)) {
-            // 先删除，后插入
             for (PurDeliveryVO bill : list) {
+                // 先删除原有配送单
+                // 删除明细
+                mapper.deleteDeliveryDetail(bill);
+                // 删除主表
+                mapper.deleteDelivery(bill);
 
-
-
+                // 插入主表
+                mapper.insertDelivery(bill);
+                // 插入明细
+                List<PurDeliveryDetails> detailsList = bill.getDetails();
+                if(DataUtil.isNotEmpty(detailsList)){
+                    detailsList.stream().forEach(t->{
+                        mapper.insertDeliveryDetail(t);
+                    });
+                }
             }
-
+            return "成功下载配送单"+list.size()+"条";
         }
-        return null;
+        return "成功下载配送单0条";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String importMaterial(List<BdMaterial> list) {
+        if(DataUtil.isNotEmpty(list)){
+            list.stream().forEach(t->{
+                // 先删除旧数据
+                mapper.deleteMaterial(t);
+                // 插入新数据
+                mapper.insertMaterial(t);
+            });
+            return "成功下载耗材字典"+list.size()+"条";
+        }
+        return "成功下载耗材字典0条";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String importMaterialVar(List<BdMaterialVar> list) {
+        if(DataUtil.isNotEmpty(list)){
+            list.stream().forEach(t->{
+                // 先删除旧数据
+                mapper.deleteMaterialVar(t);
+                // 插入新数据
+                mapper.insertMaterialVar(t);
+            });
+            return "成功下载耗材品种"+list.size()+"条";
+        }
+        return "成功下载耗材品种0条";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String importSupply(List<SupOrgInfo> list) {
+        if(DataUtil.isNotEmpty(list)){
+            list.stream().forEach(t->{
+                // 先删除旧数据
+                mapper.deleteSupply(t);
+                // 插入新数据
+                mapper.insertSupply(t);
+            });
+            return "成功下载供应商字典"+list.size()+"条";
+        }
+        return "成功下载供应商字典0条";
     }
 }
