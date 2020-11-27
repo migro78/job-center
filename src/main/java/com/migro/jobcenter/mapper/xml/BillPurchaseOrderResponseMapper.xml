@@ -87,22 +87,51 @@
         delete from bill_purchase_delivery_detail where ship_id = #{id}
     </select>
     <select id="insertMaterial">
-
+        insert into bd_material
+          (id, var_id, code, name, pinyin,
+          spec, price, unit, pkg_unit, pkg_factor,
+          type, yb_sku_id, udi_code, status, remark,
+          create_time, update_time)
+        values
+          (#{id}, #{varId}, #{code}, #{name}, #{pinyin,jdbcType=VARCHAR},
+          #{spec,jdbcType=VARCHAR}, #{price}, #{unit,jdbcType=VARCHAR}, #{pkgUnit,jdbcType=VARCHAR}, #{pkgFactor,jdbcType=DECIMAL},
+          #{type}, #{ybSkuId,jdbcType=VARCHAR}, #{udiCode,jdbcType=VARCHAR}, #{status}, #{remark,jdbcType=VARCHAR},
+          #{createTime}, sysdate)
     </select>
     <select id="deleteMaterial">
-
+        delete from BD_MATERIAL where id = #{id}
     </select>
     <select id="insertMaterialVar">
-
+        insert into bd_material_var
+          (id, code, common_name, pinyin, material,
+          reg_cert_id, charact, factory_id, sale_id, brand,
+          origin, manage_cat, yb_spu_id, status,remark,
+          create_time, update_time)
+        values
+          (#{id}, #{code}, #{commonName,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, #{material,jdbcType=VARCHAR},
+           #{regCertId,jdbcType=DECIMAL}, #{charact,jdbcType=VARCHAR}, #{factoryId,jdbcType=DECIMAL}, #{saleId,jdbcType=DECIMAL}, #{brand,jdbcType=VARCHAR},
+           #{origin,jdbcType=VARCHAR}, #{manageCat,jdbcType=VARCHAR}, #{ybSpuId,jdbcType=VARCHAR}, #{status}, #{remark,jdbcType=VARCHAR},
+           #{createTime}, sysdate)
     </select>
     <select id="deleteMaterialVar">
-
+        delete from BD_MATERIAL_VAR where id = #{id}
     </select>
     <select id="insertSupply">
-
+        insert into dic_supplier
+          (supplier_id, supplier_name, contacts, phone,address,
+          parent_id, spell_code, property,legal_person, account_bank,
+          account, tax_number, reg_number,remark, registered_capital)
+        values
+          (#{id}, #{orgName}, #{contact,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},
+          #{parentId,jdbcType=DECIMAL}, #{pinyin,jdbcType=VARCHAR}, #{regType,jdbcType=VARCHAR}, #{legalPerson,jdbcType=VARCHAR},'',
+          '', '', '', #{remark,jdbcType=VARCHAR}, #{regCapital,jdbcType=VARCHAR})
     </select>
-    <select id="deleteSupply">
-
+    <select id="existSupply" resultType="java.lang.Integer">
+        select count(*) from DIC_SUPPLIER where SUPPLIER_ID = #{id}
+    </select>
+    <select id="updateSupply">
+        update DIC_SUPPLIER set SUPPLIER_NAME = #{orgName}, SPELL_CODE = #{pinyin,jdbcType=VARCHAR}
+          where SUPPLIER_ID = #{id}
     </select>
 
 </mapper>

@@ -83,7 +83,7 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
         // 更新消息表状态
         for (OrderVO t : list) {
             if (DataUtil.isNotEmpty(t.getMsgId())) {
-                Map<String,Object> mapParam = DataBuilder.<String,Object>map().put("id",t.getMsgId()).put("status",status).build();
+                Map<String, Object> mapParam = DataBuilder.<String, Object>map().put("id", t.getMsgId()).put("status", status).build();
                 mapper.updateMsgStatus(mapParam);
             }
         }
@@ -98,50 +98,44 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
         Integer dataType = HttpClient.checkUpdate();
 
         // 如果有更新数据，调用平台数据下载服务
-        if(DataUtil.isNotEmpty(dataType)){
+        if (DataUtil.isNotEmpty(dataType)) {
             UnifiedInterfaceDataVO vo = HttpClient.downloadData(dataType);
             // 数据解密
             String data = new String(decoder.decode(vo.getDataContent()));
-            logger.debug("数据下载，解密后的数据：{}",data);
+            logger.debug("数据下载，解密后的数据：{}", data);
 
-            if(DataUtil.isNotEmpty(data)) {
+            if (DataUtil.isNotEmpty(data)) {
                 // 根据数据类型，分别调用数据写入服务
                 if (dataType == MsgDataType.响应单.value()) {
-                    List<PurResponseVO> list = JSON.parseArray(data,PurResponseVO.class);
+                    List<PurResponseVO> list = JSON.parseArray(data, PurResponseVO.class);
                     ret = responseService.importResponse(list);
-                    return ret;
                 }
 
-                if(dataType == MsgDataType.配送单.value()){
-                    List<PurDeliveryVO> list = JSON.parseArray(data,PurDeliveryVO.class);
+                if (dataType == MsgDataType.配送单.value()) {
+                    List<PurDeliveryVO> list = JSON.parseArray(data, PurDeliveryVO.class);
                     ret = responseService.importDelivery(list);
-                    return ret;
                 }
 
-                if(dataType == MsgDataType.耗材字典.value()){
-                    List<BdMaterial> list = JSON.parseArray(data,BdMaterial.class);
+                if (dataType == MsgDataType.耗材字典.value()) {
+                    List<BdMaterial> list = JSON.parseArray(data, BdMaterial.class);
                     ret = responseService.importMaterial(list);
-                    return ret;
                 }
 
-                if(dataType == MsgDataType.耗材品种.value()){
-                    List<BdMaterialVar> list = JSON.parseArray(data,BdMaterialVar.class);
+                if (dataType == MsgDataType.耗材品种.value()) {
+                    List<BdMaterialVar> list = JSON.parseArray(data, BdMaterialVar.class);
                     ret = responseService.importMaterialVar(list);
-                    return ret;
                 }
 
-                if(dataType == MsgDataType.供应商.value()){
-                    List<SupOrgInfo> list = JSON.parseArray(data,SupOrgInfo.class);
+                if (dataType == MsgDataType.供应商.value()) {
+                    List<SupOrgInfo> list = JSON.parseArray(data, SupOrgInfo.class);
                     ret = responseService.importSupply(list);
-                    return ret;
                 }
 
             }
 
-
+            // 调用接口更新消息状态
+            HttpClient.downloadFinish(vo);
         }
-
-
 
         return ret;
     }

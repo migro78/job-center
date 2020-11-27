@@ -11,8 +11,8 @@ import java.util.Date;
  * 耗材产品表
  * </p>
  *
- * @author ty
- * @since 2020-09-21
+ * @author migro
+ * @since 2020-11-27
  */
 @ApiModel("耗材产品表")
 @SuppressWarnings("serial")
@@ -38,6 +38,10 @@ public class BdMaterial extends BaseModel {
 	private Integer pkgFactor;
     @ApiModelProperty(value = "耗材类型  1-普通耗材 2-高值耗材 3-试剂 4-设备 5-器械")
 	private Integer type;
+    @ApiModelProperty(value = "医保编码单品ID")
+	private String ybSkuId;
+    @ApiModelProperty(value = "医保耗材DI编码")
+	private String udiCode;
     @ApiModelProperty(value = "状态  1--启用 0--停用  2--删除")
 	private Integer status;
     @ApiModelProperty(value = "创建时间")
@@ -130,6 +134,22 @@ public class BdMaterial extends BaseModel {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getYbSkuId() {
+		return ybSkuId;
+	}
+
+	public void setYbSkuId(String ybSkuId) {
+		this.ybSkuId = ybSkuId;
+	}
+
+	public String getUdiCode() {
+		return udiCode;
+	}
+
+	public void setUdiCode(String udiCode) {
+		this.udiCode = udiCode;
 	}
 
 	public Integer getStatus() {

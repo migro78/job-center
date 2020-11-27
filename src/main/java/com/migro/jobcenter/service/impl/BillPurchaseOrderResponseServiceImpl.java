@@ -117,10 +117,15 @@ public class BillPurchaseOrderResponseServiceImpl extends BaseService<BillPurcha
     public String importSupply(List<SupOrgInfo> list) {
         if(DataUtil.isNotEmpty(list)){
             list.stream().forEach(t->{
-                // 先删除旧数据
-                mapper.deleteSupply(t);
-                // 插入新数据
-                mapper.insertSupply(t);
+                // 检查数据是否存在
+                Integer exist = mapper.existSupply(t);
+                if(DataUtil.isNotEmpty(exist) && exist==1){
+                    // 如果存在则进行更新
+                    mapper.updateSupply(t);
+                } else {
+                    // 插入新数据
+                    mapper.insertSupply(t);
+                }
             });
             return "成功下载供应商字典"+list.size()+"条";
         }

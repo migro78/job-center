@@ -43,6 +43,11 @@ public class HttpClient {
      */
     private static final String URL_CHECK_UPDATE = "/interface/checkUpdate";
 
+    /**
+     * URL 统一下载完成后，消息状态更新
+     */
+    private static final String URL_DOWNLOAD_FINISH = "/interface/downloadFinish";
+
     private static Base64.Encoder encoder = Base64.getEncoder();
 
     /**
@@ -92,6 +97,7 @@ public class HttpClient {
         // 检测token
         checkToken();
         Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+        logger.debug("uploadData: url==>{}   param==> {}", GlobalParams.getHost() + URL_DATA_UPLOAD, JSON.toJSONString(vo));
         String resp = HttpUtil.post(GlobalParams.getHost() + URL_DATA_UPLOAD, JSON.toJSONString(vo), header);
         // 解析响应结果
         parseResponse(resp);
@@ -136,6 +142,20 @@ public class HttpClient {
         return vo;
     }
 
+
+    public static JSONObject downloadFinish(UnifiedInterfaceDataVO vo){
+        // 根据数据类型向服务器下载更新数据
+        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+        // 清理数据
+        vo.setDataContent(null);
+        // 调用接口
+        String resp = HttpUtil.post(GlobalParams.getHost() + URL_DOWNLOAD_FINISH,
+                JSON.toJSONString(vo), header);
+        // 解析响应结果
+        JSONObject obj = parseResponse(resp);
+        return obj;
+    }
+
     /**
      * 远程服务调用结果处理
      *
@@ -147,6 +167,7 @@ public class HttpClient {
             throw new BusinessException("远程服务调用失败！ 失败原因：无响应结果");
         }
         // 解析结果
+        logger.debug("HttpClient response==>{}", response);
         JSONObject obj = JSON.parseObject(response);
         if (!"200".equals(obj.getString("code"))) {
             throw new BusinessException("远程服务调用出错！ 错误信息：" + obj.getString("msg"));

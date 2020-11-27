@@ -40,6 +40,8 @@ public class BdMaterialVar extends BaseModel {
 	private String origin;
     @ApiModelProperty(value = "管理类别（I   II   III）")
 	private String manageCat;
+	@ApiModelProperty(value = "医保编码品类ID")
+	private String ybSpuId;
     @ApiModelProperty(value = "状态  1--启用 0--停用 2--删除")
 	private Integer status;
     @ApiModelProperty(value = "创建时间")
@@ -200,4 +202,11 @@ public class BdMaterialVar extends BaseModel {
 		this.remark = remark;
 	}
 
+	public String getYbSpuId() {
+		return ybSpuId;
+	}
+
+	public void setYbSpuId(String ybSpuId) {
+		this.ybSpuId = ybSpuId;
+	}
 }

@@ -2,6 +2,8 @@ package com.migro.jobcenter.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * <p>
  * 统一接口数据对象
@@ -19,6 +21,8 @@ public class UnifiedInterfaceDataVO {
     private Integer dataInOut;
     @ApiModelProperty(value = "数据内容(json)")
     private String dataContent;
+    @ApiModelProperty(value = "消息id集合,接口处理成功后消息状态修改回写所需参数")
+    private List<Long> ids;
 
     public Integer getDataType() {
         return dataType;
@@ -50,5 +54,13 @@ public class UnifiedInterfaceDataVO {
 
     public void setDataContent(String dataContent) {
         this.dataContent = dataContent;
+    }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
     }
 }

@@ -33,5 +33,7 @@ public interface BillPurchaseOrderResponseMapper extends BaseMapper<BillPurchase
 
     void insertSupply(SupOrgInfo param);
 
-    void deleteSupply(SupOrgInfo param);
+    Integer existSupply(SupOrgInfo param);
+
+    void updateSupply(SupOrgInfo param);
 }

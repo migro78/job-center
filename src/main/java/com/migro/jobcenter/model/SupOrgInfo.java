@@ -18,9 +18,6 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class SupOrgInfo extends BaseModel {
 
-	@ApiModelProperty("主键id")
-	private Long id;
-
     @ApiModelProperty(value = "企业登记注册类型")
 	private String regType;
     @ApiModelProperty(value = "住所")
@@ -71,6 +68,10 @@ public class SupOrgInfo extends BaseModel {
 	private Long updateBy;
     @ApiModelProperty(value = "备注")
 	private String remark;
+
+    private String orgName;
+    private String parentId;
+    private String pinyin;
 
 
 	public String getRegType() {
@@ -273,13 +274,27 @@ public class SupOrgInfo extends BaseModel {
 		this.remark = remark;
 	}
 
-	@Override
-	public Long getId() {
-		return id;
+	public String getOrgName() {
+		return orgName;
 	}
 
-	@Override
-	public void setId(Long id) {
-		this.id = id;
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 }
