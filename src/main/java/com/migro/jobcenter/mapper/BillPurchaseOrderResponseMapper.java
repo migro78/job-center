@@ -2,6 +2,7 @@ package com.migro.jobcenter.mapper;
 
 import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.PurDeliveryVO;
+import com.migro.jobcenter.model.vo.PurResponseVO;
 import top.doublewin.core.base.BaseMapper;
 /**
  * <p>
@@ -12,6 +13,8 @@ import top.doublewin.core.base.BaseMapper;
  * @since 2020-11-20
  */
 public interface BillPurchaseOrderResponseMapper extends BaseMapper<BillPurchaseOrderResponse> {
+
+    void updateOrderStatus(PurResponseVO param);
 
     void insertResponseData(BillPurchaseOrderResponse param);
 

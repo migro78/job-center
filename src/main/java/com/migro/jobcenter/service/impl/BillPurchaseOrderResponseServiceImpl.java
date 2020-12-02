@@ -35,7 +35,7 @@ public class BillPurchaseOrderResponseServiceImpl extends BaseService<BillPurcha
                 BillPurchaseOrderResponse delParam = new BillPurchaseOrderResponse();
                 delParam.setPlOrderId(bill.getOrderId().toString());
                 super.delete(delParam);
-                // 明细对象
+                // 写入明细对象
                 List<PurResponseDetails> details = bill.getPurResponseDetails();
                 if (DataUtil.isNotEmpty(details)) {
                     for (PurResponseDetails detail : details) {
@@ -45,11 +45,13 @@ public class BillPurchaseOrderResponseServiceImpl extends BaseService<BillPurcha
                         response.setOrderId(bill.getOrderCode());
                         response.setRespNum(detail.getRespNum());
                         response.setRespTime(new Date());
-                        response.setBdCode(detail.getMatId().toString());
+                        response.setBdCode(detail.getCode());
 
                         mapper.insertResponseData(response);
                     }
                 }
+                // 更新订单状态
+                mapper.updateOrderStatus(bill);
             }
             return "成功下载响应单" + list.size() + "条";
         }

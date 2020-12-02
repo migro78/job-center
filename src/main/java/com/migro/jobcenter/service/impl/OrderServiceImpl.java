@@ -53,7 +53,7 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
         List<OrderVO> list = page.getRecords();
         logger.debug("轮询采购订单，新订单数量 {}", list.size());
         if (DataUtil.isEmpty(list)) {
-            return "执行成功，上传订单数量0条.";
+            return "执行成功.";
         }
 
         // 循环查询订单明细

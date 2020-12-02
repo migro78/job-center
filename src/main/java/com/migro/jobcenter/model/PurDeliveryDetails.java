@@ -40,6 +40,8 @@ public class PurDeliveryDetails extends BaseModel {
 	private Double sendNum;
     @ApiModelProperty(value = "单位")
 	private String unit;
+	@ApiModelProperty(value = "生产厂商id")
+	private String factoryId;
     @ApiModelProperty(value = "生产厂商")
 	private String factory;
     @ApiModelProperty(value = "件数")
@@ -66,6 +68,10 @@ public class PurDeliveryDetails extends BaseModel {
 	private Integer pkgType;
     @ApiModelProperty(value = "收货数量")
 	private Double takeNum;
+	@ApiModelProperty(value = "供应商id")
+	private Long supId;
+	@ApiModelProperty(value = "装车单号")
+	private String loadNo;
 
 
 	public Long getShipId() {
@@ -260,4 +266,27 @@ public class PurDeliveryDetails extends BaseModel {
 		this.takeNum = takeNum;
 	}
 
+	public Long getSupId() {
+		return supId;
+	}
+
+	public void setSupId(Long supId) {
+		this.supId = supId;
+	}
+
+	public String getLoadNo() {
+		return loadNo;
+	}
+
+	public void setLoadNo(String loadNo) {
+		this.loadNo = loadNo;
+	}
+
+	public String getFactoryId() {
+		return factoryId;
+	}
+
+	public void setFactoryId(String factoryId) {
+		this.factoryId = factoryId;
+	}
 }

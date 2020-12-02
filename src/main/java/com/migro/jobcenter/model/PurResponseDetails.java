@@ -28,6 +28,9 @@ public class PurResponseDetails extends BaseModel {
 	private Double respNum;
     @ApiModelProperty(value = "备注")
 	private String remark;
+	@ApiModelProperty(value = "耗材编码")
+	private String code;
+
 
 
 	public Long getRespId() {
@@ -78,4 +81,11 @@ public class PurResponseDetails extends BaseModel {
 		this.remark = remark;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 }

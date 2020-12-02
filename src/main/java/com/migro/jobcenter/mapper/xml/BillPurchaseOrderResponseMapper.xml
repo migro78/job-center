@@ -52,6 +52,9 @@
 			${cm.sortAsc}
 		</if>
 	</select>
+    <select id="updateOrderStatus">
+        update BILL_PURCHASE_ORDER set STATUS = 4 where ORDER_ID = #{orderCode}
+    </select>
     <select id="insertResponseData">
         INSERT INTO BILL_PURCHASE_ORDER_RESPONSE ( PL_ORDER_ID, ORDER_ID, RESP_NUM, RESP_TIME, BD_CODE )
             VALUES ( #{plOrderId}, #{orderId}, #{respNum}, #{respTime}, #{bdCode} )
@@ -71,17 +74,17 @@
     </select>
     <select id="insertDeliveryDetail">
         insert into bill_purchase_delivery_detail
-          (id, ship_id, material_code, material_name,
-          factory_code, spec, unit, item_no,
+          (id, ship_id, material_code, material_name, load_id,
+          factory_code, spec, unit, item_no, supplier_id,
           num, batch_no, batch_lot, validity_date, production_date,
           purchase_price, is_pack, pack_type, pack_no, pack_num,
           pack_quantity, order_id, pl_order_id, invoice_no, invoice_time,status)
         values
-          (#{id}, #{shipId}, (SELECT MATERIAL_CODE FROM DIC_MATERIAL where BD_CODE=#{matCode}),#{matName},
-          (select FACTORY_CODE from BILL_PURCHASE_ORDER_DETAIL where ORDER_ID=#{ordNo} and MATERIAL_CODE=#{matId}), #{spec}, #{unit,jdbcType=VARCHAR}, 1,
+          (#{id}, #{shipId}, (SELECT MATERIAL_CODE FROM DIC_MATERIAL where BD_CODE=#{matCode}),#{matName}, #{loadNo},
+          #{factoryId}, #{spec}, #{unit,jdbcType=VARCHAR}, 1, #{supId},
           #{sendNum}, #{batchNo}, #{batchLot}, #{validDate}, #{prodDate},
           #{price}, #{isPkg,jdbcType=DECIMAL}, #{pkgType}, #{pkgNo}, #{pkgNum},
-          #{pkgCapacity}, #{ordNo}, #{id}, #{invoiceNo}, #{invoiceTime},0)
+          #{pkgCapacity}, #{ordNo}, #{id}, #{invoiceNo,jdbcType=VARCHAR}, #{invoiceTime,jdbcType=DATE},0)
     </select>
     <select id="deleteDeliveryDetail">
         delete from bill_purchase_delivery_detail where ship_id = #{id}
