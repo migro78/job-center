@@ -1,8 +1,6 @@
 package com.migro.jobcenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.migro.jobcenter.client.DataInOut;
 import com.migro.jobcenter.client.DataType;
@@ -11,7 +9,7 @@ import com.migro.jobcenter.enums.MsgDataType;
 import com.migro.jobcenter.mapper.OrderMapper;
 import com.migro.jobcenter.model.BdMaterial;
 import com.migro.jobcenter.model.BdMaterialVar;
-import com.migro.jobcenter.model.PurDelivery;
+import com.migro.jobcenter.model.OrgCert;
 import com.migro.jobcenter.model.SupOrgInfo;
 import com.migro.jobcenter.model.vo.*;
 import com.migro.jobcenter.service.IBillPurchaseOrderResponseService;
@@ -56,12 +54,15 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
             return "执行成功.";
         }
 
-        // 循环查询订单明细
+        // 循环查询订单明细、查询跟台订单信息
         Map<String, Object> map = DataBuilder.<String, Object>map().build();
         list.stream().forEach(t -> {
             map.put("code", t.getCode());
+            // 订单明细
             List<OrderDetailVO> details = mapper.listDetails(map);
             t.setDetails(details);
+            // 跟台订单信息
+
         });
 
 
@@ -129,6 +130,11 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
                 if (dataType == MsgDataType.供应商.value()) {
                     List<SupOrgInfo> list = JSON.parseArray(data, SupOrgInfo.class);
                     ret = responseService.importSupply(list);
+                }
+
+                if (dataType == MsgDataType.企业证照.value()) {
+                    List<OrgCert> list = JSON.parseArray(data, OrgCert.class);
+                    ret = responseService.importLicense(list);
                 }
 
             }

@@ -33,6 +33,10 @@
         </where>
         order by d.ORDER_ID,d.ITEM_NO
     </select>
+    <select id="getOper" resultType="com.migro.jobcenter.model.PurOrderOper">
+        SELECT PATIENT_SEX sex,PATIENT_AGE age,ICD_9_NAME_H oper_name,OPER_TIME oper_date FROM BILL_OPER
+        where
+    </select>
     <update id="updateMsgStatus">
         update INTERFACE_MSG set status = #{status},update_time = sysdate where id = #{id}
     </update>

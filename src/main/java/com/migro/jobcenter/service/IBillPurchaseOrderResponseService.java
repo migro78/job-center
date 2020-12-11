@@ -1,10 +1,7 @@
 package com.migro.jobcenter.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.migro.jobcenter.model.BdMaterial;
-import com.migro.jobcenter.model.BdMaterialVar;
-import com.migro.jobcenter.model.BillPurchaseOrderResponse;
-import com.migro.jobcenter.model.SupOrgInfo;
+import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.PurDeliveryVO;
 import com.migro.jobcenter.model.vo.PurResponseVO;
 import top.doublewin.core.base.IBaseService;
@@ -30,4 +27,6 @@ public interface IBillPurchaseOrderResponseService extends IBaseService<BillPurc
     String importMaterialVar(List<BdMaterialVar> list);
 
     String importSupply(List<SupOrgInfo> list);
+
+    String importLicense(List<OrgCert> list);
 }

@@ -1,5 +1,6 @@
 package com.migro.jobcenter.model.vo;
 
+import com.migro.jobcenter.model.PurOrderOper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import top.doublewin.core.base.BaseModel;
@@ -70,7 +71,8 @@ public class OrderVO extends BaseModel {
     private String msgId;
 
     private List<OrderDetailVO> details;
-
+    @ApiModelProperty(value = "跟台订单手术信息")
+    private PurOrderOper orderOper;
 
     public String getCode() {
         return code;
