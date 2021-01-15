@@ -1,6 +1,7 @@
 package com.migro.jobcenter.service.impl;
 
 import com.migro.jobcenter.service.IOrderService;
+import com.migro.jobcenter.service.IUploadDataService;
 import com.migro.jobcenter.service.UICService;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.logging.log4j.LogManager;
@@ -25,13 +26,15 @@ public class UICServiceImpl implements UICService {
     protected Logger logger = LogManager.getLogger();
     @Autowired
     IOrderService orderService;
+    @Autowired
+    IUploadDataService uploadDataService;
 
     @Override
-    public CompletableFuture<Map> asyncUploadOrder(Map param) {
+    public CompletableFuture<Map> asyncUploadData(Map param) {
         return CompletableFuture.supplyAsync(() -> {
-            String ret = orderService.uploadOrder(param);
+            String ret = uploadDataService.uploadData(param);
             param.put("msg", ret);
-            logger.debug("asyncUploadOrder completed...! result is {}", ret);
+            logger.debug("asyncUploadDate completed...! result is {}", ret);
             return param;
         });
     }

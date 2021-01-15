@@ -3,8 +3,10 @@ package com.migro.jobcenter.web;
 import com.migro.jobcenter.client.HttpClient;
 import com.migro.jobcenter.model.vo.OrderVO;
 import com.migro.jobcenter.service.IOrderService;
+import com.migro.jobcenter.service.IUploadDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +30,8 @@ import java.util.Map;
 @Api(value = "接口测试", description = "接口测试" ,tags = {"接口测试"})
 public class TestController extends BaseController<OrderVO, IOrderService> {
 
+    @Autowired
+    IUploadDataService uploadDataService;
 
     @PutMapping("getAccessToken")
     @ApiOperation(value = "登录获取授权码")
@@ -43,10 +47,10 @@ public class TestController extends BaseController<OrderVO, IOrderService> {
         return setSuccessModelMap(modelMap,ret);
     }
 
-    @PutMapping("uploadOrder")
-    @ApiOperation(value = "上传订单")
+    @PutMapping("uploadData")
+    @ApiOperation(value = "上传数据")
     public Object uploadOrder(ModelMap modelMap, @RequestBody Map<String,Object> param) {
-        return setSuccessModelMap(modelMap,service.uploadOrder(param));
+        return setSuccessModelMap(modelMap,uploadDataService.uploadData(param));
     }
 
 }

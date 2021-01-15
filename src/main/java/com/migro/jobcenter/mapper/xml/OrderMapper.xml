@@ -10,7 +10,7 @@
         LEFT JOIN DIC_SUPPLIER s on s.SUPPLIER_ID = o.SUPPLIER_ID
         LEFT JOIN DIC_DEPT k on k.DEPT_CODE = o.DEPT_CODE
         <where>
-            m.status = 0
+            m.status = 0  and m.data_type = 1
         </where>
         <if test="cm.orderBy != null and cm.orderBy != ''">
             order by ${cm.orderBy}

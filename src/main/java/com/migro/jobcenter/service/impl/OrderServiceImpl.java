@@ -43,54 +43,6 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
     @Autowired
     IBillPurchaseOrderResponseService responseService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public String uploadOrder(Map param) {
-        // 分页查询订单主表
-        IPage<OrderVO> page = super.pagingQuery(param);
-        List<OrderVO> list = page.getRecords();
-        logger.debug("轮询采购订单，新订单数量 {}", list.size());
-        if (DataUtil.isEmpty(list)) {
-            return "执行成功.";
-        }
-
-        // 循环查询订单明细、查询跟台订单信息
-        Map<String, Object> map = DataBuilder.<String, Object>map().build();
-        list.stream().forEach(t -> {
-            map.put("code", t.getCode());
-            // 订单明细
-            List<OrderDetailVO> details = mapper.listDetails(map);
-            t.setDetails(details);
-            // 跟台订单信息
-
-        });
-
-
-        // 调用接口上传订单
-        int status = 1;
-        try {
-            UnifiedInterfaceDataVO vo = new UnifiedInterfaceDataVO();
-            vo.setDataType(DataType.订单.value());
-            vo.setDataInOut(DataInOut.平台.value());
-            vo.setCount(list.size());
-            vo.setDataContent(JSON.toJSONString(list));
-            HttpClient.uploadData(vo);
-        } catch (Exception e) {
-            logger.error(e, e);
-            status = 2;
-        }
-
-
-        // 更新消息表状态
-        for (OrderVO t : list) {
-            if (DataUtil.isNotEmpty(t.getMsgId())) {
-                Map<String, Object> mapParam = DataBuilder.<String, Object>map().put("id", t.getMsgId()).put("status", status).build();
-                mapper.updateMsgStatus(mapParam);
-            }
-        }
-
-        return "执行成功，上传订单数量" + list.size() + "条.";
-    }
 
     @Override
     public String dataDownload(Map<String, Object> param) {

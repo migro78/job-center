@@ -15,13 +15,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 2020/11/12 15:06
  */
 public interface IOrderService extends IBaseService<OrderVO> {
-    /**
-     * 订单上传
-     *
-     * @param
-     * @return
-     */
-    String uploadOrder(Map<String, Object> param);
+
 
 
     /**

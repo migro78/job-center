@@ -34,6 +34,12 @@ public class HttpClient {
     private static final String URL_DATA_UPLOAD = "/interface/unifiedDataUpload";
 
     /**
+     * URL 统一文件上传
+     */
+    private static final String URL_FILE_UPLOAD = "/interface/unifiedFileUpload";
+
+
+    /**
      * URL 统一数据下载
      */
     private static final String URL_DATA_DOWNLOAD = "/interface/unifiedDataDownload";
@@ -103,6 +109,28 @@ public class HttpClient {
         parseResponse(resp);
         return resp;
     }
+
+    /**
+     * 统一文件上传
+     *
+     * @param
+     * @return
+     */
+    public static String uploadFile(UnifiedInterfaceDataVO vo) {
+        // 对数据内容加密
+        vo.setDataContent(encoder.encodeToString(vo.getDataContent().getBytes()));
+        // 生成压缩文件流
+
+        // 检测token
+        checkToken();
+        Map<String, String> header = DataBuilder.<String, String>map().put("Authorization", GlobalParams.getAccessToken()).build();
+        logger.debug("uploadData: url==>{}   param==> {}", GlobalParams.getHost() + URL_DATA_UPLOAD, JSON.toJSONString(vo));
+        String resp = HttpUtil.post(GlobalParams.getHost() + URL_DATA_UPLOAD, JSON.toJSONString(vo), header);
+        // 解析响应结果
+        parseResponse(resp);
+        return resp;
+    }
+
 
     /**
      * 统一检查数据更新

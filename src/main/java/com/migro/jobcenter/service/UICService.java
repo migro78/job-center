@@ -18,7 +18,7 @@ public interface UICService {
      * @param
      * @return
      */
-    CompletableFuture<Map> asyncUploadOrder(Map param);
+    CompletableFuture<Map> asyncUploadData(Map param);
 
 
     /**

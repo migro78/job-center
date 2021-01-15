@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.migro.jobcenter.mapper.UploadDataMapper">
+    <select id="listOrder" resultType="com.migro.jobcenter.model.vo.OrderVO" useCache="false">
+        select o.ORDER_ID code,k.DEPT_NAME rec_stock, o.SUPPLIER_ID sup_id,s.SUPPLIER_NAME sup_name,o.ORDER_TIME
+        create_time,
+        o.SUBMIT_USER sub_user,o.SUBMIT_TIME sub_time,o.TAKE_ADDRESS rec_addr,o.TAKER rec_user,m.ID
+        msg_id,DECODE(o.ORDER_CLASS,'3','2','1') ord_type
+
+        from BILL_PURCHASE_ORDER o
+        JOIN INTERFACE_MSG m on m.DATA_CODE = o.ORDER_ID
+        LEFT JOIN DIC_SUPPLIER s on s.SUPPLIER_ID = o.SUPPLIER_ID
+        LEFT JOIN DIC_DEPT k on k.DEPT_CODE = o.DEPT_CODE
+        <where>
+            m.status = 0 and m.data_type = 1
+            <if test="pageSize != null ">
+                and rownum &lt;= #{pageSize}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            order by ${cm.orderBy}
+        </if>
+        <if test="sortAsc != null and sortAsc != ''">
+            ${cm.sortAsc}
+        </if>
+    </select>
+    <select id="listOrderDetails" resultType="com.migro.jobcenter.model.vo.OrderDetailVO" useCache="false">
+        select d.ORDER_ID code,d.ITEM_NO serial_no,d.material_code mat_code,d.MATERIAL_NAME mat_name,
+        d.SPEC,d.UNIT,d.PLAN_NUM pur_num,d.PURCHASE_PRICE price,f.FACTORY_NAME factory
+
+        from BILL_PURCHASE_ORDER_DETAIL d
+        LEFT JOIN DIC_FACTORY f on f.FACTORY_CODE = d.FACTORY_CODE
+        <where>
+            <if test="code != null and code != ''">
+                d.ORDER_ID = #{code}
+            </if>
+
+        </where>
+        order by d.ORDER_ID,d.ITEM_NO
+    </select>
+    <select id="getOper" resultType="com.migro.jobcenter.model.PurOrderOper">
+        SELECT PATIENT_SEX sex,PATIENT_AGE age,ICD_9_NAME_H oper_name,OPER_TIME oper_date FROM BILL_OPER
+        where
+    </select>
+    <update id="updateMsgStatus">
+        update INTERFACE_MSG set status = #{status},remark = #{remark},update_time = sysdate where id = #{id}
+    </update>
+    <select id="checkUpdate" resultType="java.lang.Integer">
+        SELECT DISTINCT DATA_TYPE FROM INTERFACE_MSG where STATUS = 0
+    </select>
+    <select id="listHosMaterial" resultType="com.migro.jobcenter.model.HosMaterial" useCache="false">
+        SELECT t.MATERIAL_CODE code,t.MATERIAL_NAME name,t.SPELL_CODE pinyin,t.MIN_SPEC spec,t.MIN_UNIT unit,
+               t.FACTORY_CODE factory_id,f.FACTORY_NAME factory,t.REGISTRATION_NO reg_cert_code,t.CLASS_CODE,t.PURCHASE_PRICE price,
+                     t.MATERIAL_TYPE type,t.ISHIGHT,t.FUNCTION_INFO,t.USE_INFO,t.QUALITY_INFO material,t.STATUS
+        FROM DIC_MATERIAL t
+               LEFT JOIN DIC_FACTORY f on f.FACTORY_CODE = t.FACTORY_CODE
+                     JOIN INTERFACE_MSG m on m.DATA_CODE = t.MATERIAL_CODE
+        Where m.status = 0 and m.data_type = 4
+</select>
+</mapper>
