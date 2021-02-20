@@ -10,8 +10,15 @@ package com.migro.jobcenter.client;
  */
 public enum DataType {
     // 接口数据类型  1--订单
-    订单(1),
-    其他(2);
+    采购订单(1),
+    响应单(2),
+    配送单(3),
+    耗材字典(4),
+    供应商(5),
+    耗材品种(6),
+    企业证照(7),
+    耗材注册证(8)
+    ;
 
     private int value = 0;
 

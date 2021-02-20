@@ -48,13 +48,19 @@
     <select id="checkUpdate" resultType="java.lang.Integer">
         SELECT DISTINCT DATA_TYPE FROM INTERFACE_MSG where STATUS = 0
     </select>
-    <select id="listHosMaterial" resultType="com.migro.jobcenter.model.HosMaterial" useCache="false">
+    <select id="listHosMaterial" resultType="com.migro.jobcenter.model.vo.HosMaterialVO" useCache="false">
         SELECT t.MATERIAL_CODE code,t.MATERIAL_NAME name,t.SPELL_CODE pinyin,t.MIN_SPEC spec,t.MIN_UNIT unit,
-               t.FACTORY_CODE factory_id,f.FACTORY_NAME factory,t.REGISTRATION_NO reg_cert_code,t.CLASS_CODE,t.PURCHASE_PRICE price,
-                     t.MATERIAL_TYPE type,t.ISHIGHT,t.FUNCTION_INFO,t.USE_INFO,t.QUALITY_INFO material,t.STATUS
+                t.FACTORY_CODE factory_id,f.FACTORY_NAME factory,t.REGISTRATION_NO reg_cert_code,t.CLASS_CODE,t.PURCHASE_PRICE price,
+                t.MATERIAL_TYPE type,t.ISHIGHT,t.FUNCTION_INFO,t.USE_INFO,t.QUALITY_INFO material,t.STATUS,m.id msg_id
         FROM DIC_MATERIAL t
-               LEFT JOIN DIC_FACTORY f on f.FACTORY_CODE = t.FACTORY_CODE
-                     JOIN INTERFACE_MSG m on m.DATA_CODE = t.MATERIAL_CODE
-        Where m.status = 0 and m.data_type = 4
-</select>
+              LEFT JOIN DIC_FACTORY f on f.FACTORY_CODE = t.FACTORY_CODE
+              JOIN INTERFACE_MSG m on m.DATA_CODE = t.MATERIAL_CODE
+        <where>
+            m.status = 0 and m.data_type = 4
+            <if test="pageSize != null ">
+                and rownum &lt;= #{pageSize}
+            </if>
+        </where>
+
+    </select>
 </mapper>

@@ -183,6 +183,10 @@
                             <mainClass>com.migro.jobcenter.JobCenterApplication</mainClass>
                         </manifest>
                     </archive>
+                    <excludes>
+                        <exclude>/application.yml</exclude>
+                        <exclude>/com/migro/jobcenter/mapper/xml/</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 

@@ -3,6 +3,7 @@ package com.migro.jobcenter.mapper;
 
 import com.migro.jobcenter.model.HosMaterial;
 import com.migro.jobcenter.model.PurOrderOper;
+import com.migro.jobcenter.model.vo.HosMaterialVO;
 import com.migro.jobcenter.model.vo.OrderDetailVO;
 import com.migro.jobcenter.model.vo.OrderVO;
 
@@ -64,6 +65,6 @@ public interface UploadDataMapper {
      * @param
      * @return
      */
-    List<HosMaterial> listHosMaterial(Map<String, Object> param);
+    List<HosMaterialVO> listHosMaterial(Map<String, Object> param);
 
 }

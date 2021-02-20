@@ -6,6 +6,7 @@ import com.migro.jobcenter.client.DataType;
 import com.migro.jobcenter.client.HttpClient;
 import com.migro.jobcenter.enums.MsgDataType;
 import com.migro.jobcenter.mapper.UploadDataMapper;
+import com.migro.jobcenter.model.vo.HosMaterialVO;
 import com.migro.jobcenter.model.vo.OrderDetailVO;
 import com.migro.jobcenter.model.vo.OrderVO;
 import com.migro.jobcenter.model.vo.UnifiedInterfaceDataVO;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 import top.doublewin.core.builder.DataBuilder;
 import top.doublewin.core.util.DataUtil;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +34,15 @@ import java.util.Map;
 @Component
 public class UploadDataServiceImpl implements IUploadDataService {
     protected Logger logger = LogManager.getLogger();
-    public static final Integer DEFAULT_PAGE_SIZE = 1;
+    /**
+     * 默认每次提取记录最大值
+     */
+    static final Integer DEFAULT_PAGE_SIZE = 10;
+
+    /**
+     * 异常消息记录最大长度
+     */
+    static final Integer MAX_ERROR_MESSAGE_LENGTH = 250;
 
     @Autowired
     UploadDataMapper mapper;
@@ -61,6 +69,11 @@ public class UploadDataServiceImpl implements IUploadDataService {
                 retMsg = uploadOrder(param);
             }
 
+            if(type.equals(MsgDataType.耗材字典.value())){
+                param.put("pageSize", DEFAULT_PAGE_SIZE);
+                retMsg = uploadMaterial(param);
+            }
+
             return retMsg;
         }
         return "成功执行，无上传数据！";
@@ -76,7 +89,7 @@ public class UploadDataServiceImpl implements IUploadDataService {
     private String uploadOrder(Map<String, Object> param) {
         // 查询订单主表
         List<OrderVO> list = mapper.listOrder(param);
-        logger.debug("轮询采购订单，新订单数量 {}", list.size());
+        logger.debug("待上传采购订单数量 {}", list.size());
         if (DataUtil.isEmpty(list)) {
             return "执行成功.";
         }
@@ -92,13 +105,12 @@ public class UploadDataServiceImpl implements IUploadDataService {
 
         });
 
-
         // 调用接口上传订单
         int status = 1;
         String errMsg = "";
         try {
             UnifiedInterfaceDataVO vo = new UnifiedInterfaceDataVO();
-            vo.setDataType(DataType.订单.value());
+            vo.setDataType(DataType.采购订单.value());
             vo.setDataInOut(DataInOut.平台.value());
             vo.setCount(list.size());
             vo.setDataContent(JSON.toJSONString(list));
@@ -106,7 +118,7 @@ public class UploadDataServiceImpl implements IUploadDataService {
         } catch (Exception e) {
             logger.error(e, e);
             status = 2;
-            errMsg = e.getMessage().substring(0, 200);
+            errMsg = e.getMessage().substring(0, MAX_ERROR_MESSAGE_LENGTH);
         }
 
 
@@ -129,6 +141,38 @@ public class UploadDataServiceImpl implements IUploadDataService {
      * @return
      */
     private String uploadMaterial(Map<String, Object> param) {
-        return null;
+        // 查询耗材数据
+        List<HosMaterialVO> list = mapper.listHosMaterial(param);
+        logger.debug("待上传耗材数量 {}", list.size());
+        if (DataUtil.isEmpty(list)) {
+            return "执行成功.";
+        }
+
+        // 调用接口上传订单
+        int status = 1;
+        String errMsg = "";
+        try {
+            UnifiedInterfaceDataVO vo = new UnifiedInterfaceDataVO();
+            vo.setDataType(DataType.耗材字典.value());
+            vo.setDataInOut(DataInOut.平台.value());
+            vo.setCount(list.size());
+            vo.setDataContent(JSON.toJSONString(list));
+            HttpClient.uploadData(vo);
+        } catch (Exception e) {
+            logger.error(e, e);
+            status = 2;
+            errMsg = e.getMessage().substring(0, MAX_ERROR_MESSAGE_LENGTH);
+        }
+
+        // 更新消息表状态
+        for (HosMaterialVO t : list) {
+            if (DataUtil.isNotEmpty(t.getMsgId())) {
+                Map<String, Object> mapParam = DataBuilder.<String, Object>map().put("id", t.getMsgId()).put("status", status)
+                        .put("remark", errMsg).build();
+                mapper.updateMsgStatus(mapParam);
+            }
+        }
+
+        return "执行成功，上传院内耗材字典数量" + list.size() + "条.";
     }
 }
