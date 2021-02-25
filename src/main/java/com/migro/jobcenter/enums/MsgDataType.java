@@ -17,7 +17,8 @@ public enum MsgDataType {
     供应商(5),
     耗材品种(6),
     企业证照(7),
-    耗材注册证(8)
+    耗材注册证(8),
+    生产厂商(9)
     ;
 
     private int value = 0;

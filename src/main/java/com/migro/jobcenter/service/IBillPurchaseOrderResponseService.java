@@ -29,4 +29,6 @@ public interface IBillPurchaseOrderResponseService extends IBaseService<BillPurc
     String importSupply(List<SupOrgInfo> list);
 
     String importLicense(List<OrgCert> list);
+
+    String importFactory(List<DicFactory> list);
 }

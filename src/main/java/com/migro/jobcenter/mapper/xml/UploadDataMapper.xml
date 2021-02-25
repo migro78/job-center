@@ -26,7 +26,7 @@
     </select>
     <select id="listOrderDetails" resultType="com.migro.jobcenter.model.vo.OrderDetailVO" useCache="false">
         select d.ORDER_ID code,d.ITEM_NO serial_no,d.material_code mat_code,d.MATERIAL_NAME mat_name,
-        d.SPEC,d.UNIT,d.PLAN_NUM pur_num,d.PURCHASE_PRICE price,f.FACTORY_NAME factory
+        d.SPEC,d.UNIT,d.PLAN_NUM pur_num,d.PURCHASE_PRICE price,d.FACTORY_CODE,f.FACTORY_NAME factory
 
         from BILL_PURCHASE_ORDER_DETAIL d
         LEFT JOIN DIC_FACTORY f on f.FACTORY_CODE = d.FACTORY_CODE

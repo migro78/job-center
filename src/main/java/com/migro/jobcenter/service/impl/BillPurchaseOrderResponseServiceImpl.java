@@ -144,8 +144,23 @@ public class BillPurchaseOrderResponseServiceImpl extends BaseService<BillPurcha
                 // 插入新数据
                 mapper.insertLicense(t);
             });
-            return "成功下供应商证照"+list.size()+"条";
+            return "成功下载供应商证照"+list.size()+"条";
         }
-        return "成功下供应商证照0条";
+        return "成功下载供应商证照0条";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String importFactory(List<DicFactory> list) {
+        if(DataUtil.isNotEmpty(list)){
+            list.stream().forEach(t->{
+                // 先删除旧数据
+                mapper.deleteFactory(t);
+                // 插入新数据
+                mapper.insertFactory(t);
+            });
+            return "成功下载生产厂商"+list.size()+"条";
+        }
+        return "成功下载生产厂商0条";
     }
 }

@@ -43,4 +43,8 @@ public interface BillPurchaseOrderResponseMapper extends BaseMapper<BillPurchase
     void insertLicense(OrgCert param);
 
     void deleteLicense(OrgCert param);
+
+    void insertFactory(DicFactory param);
+
+    void deleteFactory(DicFactory param);
 }

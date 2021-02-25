@@ -7,10 +7,7 @@ import com.migro.jobcenter.client.DataType;
 import com.migro.jobcenter.client.HttpClient;
 import com.migro.jobcenter.enums.MsgDataType;
 import com.migro.jobcenter.mapper.OrderMapper;
-import com.migro.jobcenter.model.BdMaterial;
-import com.migro.jobcenter.model.BdMaterialVar;
-import com.migro.jobcenter.model.OrgCert;
-import com.migro.jobcenter.model.SupOrgInfo;
+import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.*;
 import com.migro.jobcenter.service.IBillPurchaseOrderResponseService;
 import com.migro.jobcenter.service.IOrderService;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import top.doublewin.core.base.BaseService;
 import top.doublewin.core.builder.DataBuilder;
+import top.doublewin.core.exception.BusinessException;
 import top.doublewin.core.util.DataUtil;
 
 import java.util.Base64;
@@ -54,6 +52,9 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
         if (DataUtil.isNotEmpty(dataType)) {
             UnifiedInterfaceDataVO vo = HttpClient.downloadData(dataType);
             // 数据解密
+            if(DataUtil.isEmpty(vo.getDataContent())){
+                throw new BusinessException("数据下载异常，数据内容为空！");
+            }
             String data = new String(decoder.decode(vo.getDataContent()));
             logger.debug("数据下载，解密后的数据：{}", data);
 
@@ -87,6 +88,11 @@ public class OrderServiceImpl extends BaseService<OrderVO, OrderMapper> implemen
                 if (dataType == MsgDataType.企业证照.value()) {
                     List<OrgCert> list = JSON.parseArray(data, OrgCert.class);
                     ret = responseService.importLicense(list);
+                }
+
+                if(dataType == MsgDataType.生产厂商.value()){
+                    List<DicFactory> list = JSON.parseArray(data, DicFactory.class);
+                    ret = responseService.importFactory(list);
                 }
 
             }

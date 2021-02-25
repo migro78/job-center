@@ -30,6 +30,8 @@ public class OrderDetailVO extends BaseModel {
     private String spec;
     @ApiModelProperty(value = "单位")
     private String unit;
+    @ApiModelProperty(value = "生产厂商院内编码")
+    private String factoryCode;
     @ApiModelProperty(value = "生产厂商")
     private String factory;
     @ApiModelProperty(value = "采购数量")
@@ -154,5 +156,13 @@ public class OrderDetailVO extends BaseModel {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
     }
 }

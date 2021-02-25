@@ -80,7 +80,7 @@
           purchase_price, is_pack, pack_type, pack_no, pack_num,
           pack_quantity, order_id, pl_order_id, invoice_no, invoice_time,status)
         values
-          (#{id}, #{shipId}, (SELECT MATERIAL_CODE FROM DIC_MATERIAL where BD_CODE=#{matCode}),#{matName}, #{loadNo},
+          (#{id}, #{shipId}, #{hosMatCode},#{matName}, #{loadNo},
           #{factoryId}, #{spec}, #{unit,jdbcType=VARCHAR}, 1, #{supId},
           #{sendNum}, #{batchNo}, #{batchLot}, #{validDate}, #{prodDate},
           #{price}, #{isPkg,jdbcType=DECIMAL}, #{pkgType}, #{pkgNo}, #{pkgNum},
@@ -149,5 +149,13 @@
     <select id="deleteLicense">
         delete from dic_license_info where LICENSE_CODE = #{id}
     </select>
-
+    <select id="insertFactory">
+        insert into dic_factory
+          (factory_code, factory_name, spell_code)
+        values
+          (#{code}, #{name}, #{pinyin,jdbcType=VARCHAR})
+    </select>
+    <select id="deleteFactory">
+        delete from dic_factory where factory_code = #{code}
+    </select>
 </mapper>

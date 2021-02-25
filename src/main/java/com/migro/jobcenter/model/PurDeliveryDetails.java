@@ -72,7 +72,17 @@ public class PurDeliveryDetails extends BaseModel {
 	private Long supId;
 	@ApiModelProperty(value = "装车单号")
 	private String loadNo;
+	@ApiModelProperty(value = "院内耗材编码")
+	private String hosMatCode;
 
+
+	public String getHosMatCode() {
+		return hosMatCode;
+	}
+
+	public void setHosMatCode(String hosMatCode) {
+		this.hosMatCode = hosMatCode;
+	}
 
 	public Long getShipId() {
 		return shipId;
