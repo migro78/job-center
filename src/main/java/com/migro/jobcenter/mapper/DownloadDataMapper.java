@@ -12,11 +12,11 @@ import top.doublewin.core.base.BaseMapper;
  * @author migro
  * @since 2020-11-20
  */
-public interface BillPurchaseOrderResponseMapper extends BaseMapper<BillPurchaseOrderResponse> {
+public interface DownloadDataMapper extends BaseMapper<OrderResponse> {
 
     void updateOrderStatus(PurResponseVO param);
 
-    void insertResponseData(BillPurchaseOrderResponse param);
+    void insertResponseData(OrderResponse param);
 
     void insertDelivery(PurDeliveryVO param);
 

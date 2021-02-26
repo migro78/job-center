@@ -1,6 +1,6 @@
 package com.migro.jobcenter.service.impl;
 
-import com.migro.jobcenter.service.IOrderService;
+import com.migro.jobcenter.service.IDownloadDataService;
 import com.migro.jobcenter.service.IUploadDataService;
 import com.migro.jobcenter.service.UICService;
 import org.apache.dubbo.config.annotation.Service;
@@ -24,8 +24,9 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class UICServiceImpl implements UICService {
     protected Logger logger = LogManager.getLogger();
+
     @Autowired
-    IOrderService orderService;
+    IDownloadDataService downloadDataService;
     @Autowired
     IUploadDataService uploadDataService;
 
@@ -42,7 +43,7 @@ public class UICServiceImpl implements UICService {
     @Override
     public CompletableFuture<Map> asyncDataDownload(Map param) {
         return CompletableFuture.supplyAsync(() -> {
-            String ret = orderService.dataDownload(param);
+            String ret = downloadDataService.downloadData(param);
             param.put("msg", ret);
             logger.debug("asyncDataDownload completed...! result is {}", ret);
             return param;

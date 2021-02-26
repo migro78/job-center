@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("订单响应表")
 @TableName("BILL_PURCHASE_ORDER_RESPONSE")
 @SuppressWarnings("serial")
-public class BillPurchaseOrderResponse extends BaseModel {
+public class OrderResponse extends BaseModel {
 
 	@ApiModelProperty("主键id")
 	@TableId(value = "ID",type = IdType.AUTO)

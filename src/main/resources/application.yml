@@ -5,7 +5,8 @@ server:
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@192.168.0.223:1521:mtl
+    #url: jdbc:oracle:thin:@192.168.0.223:1521:mtl
+    url: jdbc:oracle:thin:@192.168.0.81:1521:mtl
     username: JOBCENTER
     password: JOBCENTER
   quartz:
@@ -39,7 +40,8 @@ job:
 
 #接口客户端配置
 client:
-  host: http://139.186.142.225:8068  # 平台服务器
+  #host: http://139.186.142.225:8068  # 平台服务器
+  host: http://192.168.0.150:8068  # 平台服务器
   #host: http://127.0.0.1:8068  # 平台服务器
   account: 30       # 客户端帐号
   secret: 123456   # 客户端密码

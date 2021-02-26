@@ -1,12 +1,12 @@
 package com.migro.jobcenter.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.migro.jobcenter.model.*;
 import com.migro.jobcenter.model.vo.PurDeliveryVO;
 import com.migro.jobcenter.model.vo.PurResponseVO;
 import top.doublewin.core.base.IBaseService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,7 +16,15 @@ import java.util.List;
  * @author migro
  * @since 2020-11-20
  */
-public interface IBillPurchaseOrderResponseService extends IBaseService<BillPurchaseOrderResponse> {
+public interface IDownloadDataService extends IBaseService<OrderResponse> {
+
+    /**
+     * 数据下载更新
+     *
+     * @param
+     * @return
+     */
+    String downloadData(Map<String, Object> param);
 
     String importResponse(List<PurResponseVO> list);
 

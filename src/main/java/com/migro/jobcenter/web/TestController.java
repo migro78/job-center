@@ -1,8 +1,8 @@
 package com.migro.jobcenter.web;
 
 import com.migro.jobcenter.client.HttpClient;
-import com.migro.jobcenter.model.vo.OrderVO;
-import com.migro.jobcenter.service.IOrderService;
+import com.migro.jobcenter.model.OrderResponse;
+import com.migro.jobcenter.service.IDownloadDataService;
 import com.migro.jobcenter.service.IUploadDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import top.doublewin.core.base.BaseController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/test/")
 @Api(value = "接口测试", description = "接口测试" ,tags = {"接口测试"})
-public class TestController extends BaseController<OrderVO, IOrderService> {
+public class TestController extends BaseController<OrderResponse, IDownloadDataService> {
 
     @Autowired
     IUploadDataService uploadDataService;
